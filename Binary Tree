@@ -1,0 +1,520 @@
+#IMPLEMENTING BINARY TREE DATA STRUCTURE WITH INSERTION, DELETION, TRAVERSAL OPERATIONS
+
+
+
+"""Basic reference code :"""
+
+class Node:
+    def __init__(self, key):
+        self.left = None
+        self.right = None
+        self.val = key
+
+class BinaryTree:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, key):
+        if self.root is None:
+            self.root = Node(key)
+        else:
+            self._insert(self.root, key)
+
+    def _insert(self, root, key):
+        if key < root.val:
+            if root.left is None:
+                root.left = Node(key)
+            else:
+                self._insert(root.left, key)
+        else:
+            if root.right is None:
+                root.right = Node(key)
+            else:
+                self._insert(root.right, key)
+
+    def delete(self, key):
+        self.root = self._delete(self.root, key)
+
+    def _delete(self, root, key):
+        if root is None:
+            return root
+        if key < root.val:
+            root.left = self._delete(root.left, key)
+        elif key > root.val:
+            root.right = self._delete(root.right, key)
+        else:
+            if root.left is None:
+                return root.right
+            elif root.right is None:
+                return root.left
+            min_larger_node = self._get_min(root.right)
+            root.val = min_larger_node.val
+            root.right = self._delete(root.right, min_larger_node.val)
+        return root
+
+    def _get_min(self, node):
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
+
+    def inorder_traversal(self):
+        return self._inorder_traversal(self.root)
+
+    def _inorder_traversal(self, root):
+        res = []
+        if root:
+            res = self._inorder_traversal(root.left)
+            res.append(root.val)
+            res = res + self._inorder_traversal(root.right)
+        return res
+
+    def preorder_traversal(self):
+        return self._preorder_traversal(self.root)
+
+    def _preorder_traversal(self, root):
+        res = []
+        if root:
+            res.append(root.val)
+            res = res + self._preorder_traversal(root.left)
+            res = res + self._preorder_traversal(root.right)
+        return res
+
+    def postorder_traversal(self):
+        return self._postorder_traversal(self.root)
+
+    def _postorder_traversal(self, root):
+        res = []
+        if root:
+            res = self._postorder_traversal(root.left)
+            res = res + self._postorder_traversal(root.right)
+            res.append(root.val)
+        return res
+
+
+if __name__ == "__main__":
+    bt = BinaryTree()
+    bt.insert(50)
+    bt.insert(30)
+    bt.insert(20)
+    bt.insert(40)
+    bt.insert(70)
+    bt.insert(60)
+    bt.insert(80)
+
+    print("Inorder traversal: ", bt.inorder_traversal())
+    print("Preorder traversal: ", bt.preorder_traversal())
+    print("Postorder traversal: ", bt.postorder_traversal())
+
+    bt.delete(20)
+    print("Inorder traversal after deletion of 20: ", bt.inorder_traversal())
+
+    bt.delete(30)
+    print("Inorder traversal after deletion of 30: ", bt.inorder_traversal())
+
+    bt.delete(50)
+    print("Inorder traversal after deletion of 50: ", bt.inorder_traversal())
+
+
+
+
+"""Step by step disection : """
+
+#This class represents a node in the binary tree. Each node contains a key (value), and pointers to the left and right children.
+#`self.left and self.right`: These point to the left and right child nodes, respectively.
+#`self.val`: This holds the key or value of the node.
+
+class Node:
+    def __init__(self, key):
+        self.left = None
+        self.right = None
+        self.val = key
+
+#Binary Tree Class
+
+#This class represents the binary tree and contains methods for insertion, deletion, and traversals.
+#This class represents the binary tree itself.
+#The tree has one property, root, which points to the root node of the tree.
+#The __init__method initializes an empty tree with root set to None.
+
+class BinaryTree:
+    def __init__(self):
+        self.root = None
+
+#Insertion Method
+
+#The insert method adds a new node with the given key to the tree.
+#If the tree is empty (i.e., root is None), the new node becomes the root.
+#Otherwise, it calls the _insert helper method to find the correct position for the new node.
+#The _insert method recursively traverses the tree:
+#1.If the key is less than the current node's value, it moves to the left child.
+#2.If the key is greater than or equal to the current node's value, it moves to the right child.
+#3.It continues until it finds an empty spot where it can insert the new node.
+
+def insert(self, key):
+    if self.root is None:
+        self.root = Node(key)
+    else:
+        self._insert(self.root, key)
+
+def _insert(self, root, key):
+    if key < root.val:
+        if root.left is None:
+            root.left = Node(key)
+        else:
+            self._insert(root.left, key)
+    else:
+        if root.right is None:
+            root.right = Node(key)
+        else:
+            self._insert(root.right, key)
+
+# Delete Method
+
+#The delete method removes a node with the given key from the tree.
+#It calls the _delete helper method to find and remove the node.
+#The _delete method recursively traverses the tree to find the node to be deleted:
+#1.If the key is less than the current node's value, it moves to the left child.
+#2.If the key is greater than the current node's value, it moves to the right child.
+#3.If the key matches the current node's value, it performs the deletion.
+#4.There are three cases for deletion:*
+#5.The node has no children: simply remove the node.
+#6.The node has one child: replace the node with its child.
+#7.The node has two children: find the minimum value in the right subtree (_get_min),
+#replace the node's value with this minimum value, and then delete the minimum value node from the right subtree.
+
+def delete(self, key):
+    self.root = self._delete(self.root, key)
+
+def _delete(self, root, key):
+    if root is None:
+        return root
+    if key < root.val:
+        root.left = self._delete(root.left, key)
+    elif key > root.val:
+        root.right = self._delete(root.right, key)
+    else:
+        if root.left is None:
+            return root.right
+        elif root.right is None:
+            return root.left
+        min_larger_node = self._get_min(root.right)
+        root.val = min_larger_node.val
+        root.right = self._delete(root.right, min_larger_node.val)
+    return root
+
+def _get_min(self, node):
+    current = node
+    while current.left is not None:
+        current = current.left
+    return current
+
+#Traversal Methods
+
+#These methods perform different types of tree traversals:
+#1.Inorder: Left subtree, root node, right subtree.
+#2.Preorder: Root node, left subtree, right subtree.
+#3.Postorder: Left subtree, right subtree, root node. Each traversal method calls a helper method (_inorder_traversal, _preorder_traversal, _postorder_traversal) to recursively traverse
+the tree and collect the node values in a list.
+
+def inorder_traversal(self):
+    return self._inorder_traversal(self.root)
+
+def _inorder_traversal(self, root):
+    res = []
+    if root:
+        res = self._inorder_traversal(root.left)
+        res.append(root.val)
+        res = res + self._inorder_traversal(root.right)
+    return res
+
+def preorder_traversal(self):
+    return self._preorder_traversal(self.root)
+
+def _preorder_traversal(self, root):
+    res = []
+    if root:
+        res.append(root.val)
+        res = res + self._preorder_traversal(root.left)
+        res = res + self._preorder_traversal(root.right)
+    return res
+
+def postorder_traversal(self):
+    return self._postorder_traversal(self.root)
+
+def _postorder_traversal(self, root):
+    res = []
+    if root:
+        res = self._postorder_traversal(root.left)
+        res = res + self._postorder_traversal(root.right)
+        res.append(root.val)
+    return res
+
+
+
+
+
+"""Command Line Interface for Python :"""
+
+class Node:
+    def __init__(self, key):
+        self.left = None
+        self.right = None
+        self.val = key
+
+class BinaryTree:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, key):
+        if self.root is None:
+            self.root = Node(key)
+        else:
+            self._insert(self.root, key)
+
+    def _insert(self, root, key):
+        if key < root.val:
+            if root.left is None:
+                root.left = Node(key)
+            else:
+                self._insert(root.left, key)
+        else:
+            if root.right is None:
+                root.right = Node(key)
+            else:
+                self._insert(root.right, key)
+
+    def delete(self, key):
+        self.root = self._delete(self.root, key)
+
+    def _delete(self, root, key):
+        if root is None:
+            return root
+        if key < root.val:
+            root.left = self._delete(root.left, key)
+        elif key > root.val:
+            root.right = self._delete(root.right, key)
+        else:
+            if root.left is None:
+                return root.right
+            elif root.right is None:
+                return root.left
+            min_larger_node = self._get_min(root.right)
+            root.val = min_larger_node.val
+            root.right = self._delete(root.right, min_larger_node.val)
+        return root
+
+    def _get_min(self, node):
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
+
+    def inorder_traversal(self):
+        return self._inorder_traversal(self.root)
+
+    def _inorder_traversal(self, root):
+        res = []
+        if root:
+            res = self._inorder_traversal(root.left)
+            res.append(root.val)
+            res = res + self._inorder_traversal(root.right)
+        return res
+
+    def preorder_traversal(self):
+        return self._preorder_traversal(self.root)
+
+    def _preorder_traversal(self, root):
+        res = []
+        if root:
+            res.append(root.val)
+            res = res + self._preorder_traversal(root.left)
+            res = res + self._preorder_traversal(root.right)
+        return res
+
+    def postorder_traversal(self):
+        return self._postorder_traversal(self.root)
+
+    def _postorder_traversal(self, root):
+        res = []
+        if root:
+            res = self._postorder_traversal(root.left)
+            res = res + self._postorder_traversal(root.right)
+            res.append(root.val)
+        return res
+
+def main():
+    bt = BinaryTree()
+
+    while True:
+        print("\nOptions:")
+        print("1. Insert")
+        print("2. Delete")
+        print("3. Inorder Traversal")
+        print("4. Preorder Traversal")
+        print("5. Postorder Traversal")
+        print("6. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            key = int(input("Enter the value to insert: "))
+            bt.insert(key)
+        elif choice == '2':
+            key = int(input("Enter the value to delete: "))
+            bt.delete(key)
+        elif choice == '3':
+            print("Inorder traversal: ", bt.inorder_traversal())
+        elif choice == '4':
+            print("Preorder traversal: ", bt.preorder_traversal())
+        elif choice == '5':
+            print("Postorder traversal: ", bt.postorder_traversal())
+        elif choice == '6':
+            print("Exited Successfully")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 6.")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+"""Graphical User Interface :"""
+
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import font
+
+# Class to create a new node
+class Node:
+    def __init__(self, key):
+        self.left = None
+        self.right = None
+        self.val = key
+
+# Class for binary tree operations
+class BinaryTree:
+    def __init__(self):          # Initializing an empty tree with root set to None.
+        self.root = None
+
+    def insert(self, key):       # Adds a new node with the given key
+        if self.root is None:
+            self.root = Node(key)  # Creates root node if tree is empty
+        else:
+            self._insert(self.root, key)
+
+    def _insert(self, root, key):  # Helper function to insert values
+        if key < root.val:  # If key is less than root, go left
+            if root.left is None:
+                root.left = Node(key)  # Insert here if left child is empty
+            else:
+                self._insert(root.left, key)  # Recur to the left
+        else:  # If key is greater than root, go right
+            if root.right is None:
+                root.right = Node(key)  # Insert here if right child is empty
+            else:
+                self._insert(root.right, key)  # Recur to the right
+
+    def inorder_traversal(self):  # Calls helper function for traversal
+        result = []
+        self._inorder_traversal(self.root, result)
+        return result
+
+    def _inorder_traversal(self, root, result):  # Helper function for inorder traversal
+        if root is not None:
+            self._inorder_traversal(root.left, result)
+            result.append(root.val)  # Append the root value to result
+            self._inorder_traversal(root.right, result)
+
+    def delete(self, key):  # Calls helper function for deletion
+        self.root = self._delete(self.root, key)
+
+    def _delete(self, root, key):  # Helper function for deletion
+        if root is None:
+            return root
+        if key < root.val:
+            root.left = self._delete(root.left, key)  # Recur to the left
+        elif key > root.val:
+            root.right = self._delete(root.right, key)  # Recur to the right
+        else:
+            if root.left is None:
+                return root.right  # Replace with right child if left is empty
+            elif root.right is None:
+                return root.left  # Replace with left child if right is empty
+
+            min_larger_node = self._get_min(root.right)
+            root.val = min_larger_node.val
+            root.right = self._delete(root.right, min_larger_node.val)
+        return root
+
+    def _get_min(self, root):  # Helper to find the minimum node in a subtree
+        current = root
+        while current.left is not None:
+            current = current.left
+        return current
+
+# GUI class
+class BinaryTreeGUI:
+    def __init__(self, root):
+        self.bt = BinaryTree()  # Instance of BinaryTree
+        self.root = root
+        self.root.title("Binary Tree")
+        self.root.configure(bg='light blue')
+
+        # Define the font
+        self.script_font = font.Font(family="Script MT Bold", size=16)
+
+        # Label for Binary Tree Operations
+        self.label = tk.Label(root, text="Binary Tree Operations", font=self.script_font,bg="#00FFFF")
+        self.label.pack(pady=10)
+
+        # Entry for inserting value
+        self.entry = tk.Entry(root)
+        self.entry.pack()
+
+        # Button to insert value
+        self.insert_button = tk.Button(root, text="Insert", command=self.insert_value)
+        self.insert_button.pack()
+
+        # Button to delete value
+        self.delete_button = tk.Button(root, text="Delete", command=self.delete_value)
+        self.delete_button.pack()
+
+        # Button for in-order traversal
+        self.inorder_button = tk.Button(root, text="In-order Traversal", command=self.inorder_traversal)
+        self.inorder_button.pack()
+
+    def insert_value(self):  # Inserts the value entered by the user
+        value = self.entry.get()
+        if value.isdigit():
+            self.bt.insert(int(value))
+            messagebox.showinfo("Success", f"Value {value} inserted.")
+        else:
+            messagebox.showerror("Error", "Please enter a valid integer.")
+
+    def delete_value(self):  # Deletes the value entered by the user
+        value = self.entry.get()
+        if value.isdigit():
+            self.bt.delete(int(value))
+            messagebox.showinfo("Success", f"Value {value} deleted.")
+        else:
+            messagebox.showerror("Error", "Please enter a valid integer.")
+
+    def inorder_traversal(self):  # Displays the in-order traversal of the tree
+        result = self.bt.inorder_traversal()
+        messagebox.showinfo("In-order Traversal", f"Values: {result}")
+
+# Main function to run the GUI
+if __name__ == '__main__':
+    root = tk.Tk()
+    gui = BinaryTreeGUI(root)
+    root.mainloop()
+
+
+
+
+
+#Link for google colab : https://colab.research.google.com/drive/19QLPdN5Lh_Nnr-wOF9Ut0mY6m2E1O_N9?usp=sharing
