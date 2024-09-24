@@ -1,0 +1,266 @@
+#IMPLEMENTING TRAVELLING SALESMAN PROBLEM 
+
+
+
+"""Basic reference code :"""
+
+from itertools import permutations
+import math
+
+class TSP:
+    def __init__(self, distance_matrix):
+        self.distance_matrix = distance_matrix
+        self.num_cities = len(distance_matrix)
+
+    def calculate_total_distance(self, route):
+        """Calculate the total distance of a given route."""
+        total_distance = 0
+        for i in range(len(route) - 1):
+            total_distance += self.distance_matrix[route[i]][route[i+1]]
+        # Add distance to return to the starting city
+        total_distance += self.distance_matrix[route[-1]][route[0]]
+        return total_distance
+
+    def solve(self):
+        """Solve the TSP using brute force."""
+        min_distance = math.inf
+        best_route = None
+        # Generate all possible permutations of cities (excluding the starting city)
+        for perm in permutations(range(self.num_cities)):
+            current_distance = self.calculate_total_distance(perm)
+            if current_distance < min_distance:
+                min_distance = current_distance
+                best_route = perm
+        return best_route, min_distance
+
+def print_route(route, distance):
+    """Print the optimal route and its distance."""
+    route_str = " -> ".join(f"City {city}" for city in route)
+    print(f"Optimal Route: {route_str}")
+    print(f"Total Distance: {distance}")
+
+# Example usage
+if __name__ == "__main__":
+    # Define a distance matrix for the cities
+    distance_matrix = [
+        [0, 10, 15, 20],
+        [10, 0, 35, 25],
+        [15, 35, 0, 30],
+        [20, 25, 30, 0]
+    ]
+
+    tsp = TSP(distance_matrix)
+    best_route, min_distance = tsp.solve()
+    print_route(best_route, min_distance)
+
+
+
+
+
+"""Command Line Interface for Python:"""
+
+from itertools import permutations
+import math
+
+class TSP:
+    def __init__(self, distance_matrix, localities):
+        self.distance_matrix = distance_matrix
+        self.num_cities = len(distance_matrix)
+        self.localities = localities  # List of locality names
+
+    def calculate_total_distance(self, route):
+        """Calculate the total distance of a given route."""
+        total_distance = 0
+        for i in range(len(route) - 1):
+            total_distance += self.distance_matrix[route[i]][route[i+1]]
+        # Add distance to return to the starting city
+        total_distance += self.distance_matrix[route[-1]][route[0]]
+        return total_distance
+
+    def solve(self):
+        """Solve the TSP using brute force."""
+        min_distance = math.inf
+        best_route = None
+        # Generate all possible permutations of cities (excluding the starting city)
+        for perm in permutations(range(self.num_cities)):
+            current_distance = self.calculate_total_distance(perm)
+            if current_distance < min_distance:
+                min_distance = current_distance
+                best_route = perm
+        return best_route, min_distance
+
+def print_route(route, distance, localities):
+    """Print the optimal route and its distance."""
+    route_str = " -> ".join(f"{localities[city]}" for city in route)
+    print(f"Optimal Route: {route_str}")
+    print(f"Total Distance: {distance}")
+
+# Example usage
+if __name__ == "__main__":
+    # Define a distance matrix for the cities
+    distance_matrix = [
+        [0, 130, 300, 750],
+        [130, 0, 180, 600],
+        [300, 180, 0, 450],
+        [750, 600, 450, 0]
+    ]
+
+    # Define the names of the localities
+    localities = ["Location 1", "Location 2",
+                  "Location 3", "Location 4"]
+
+    tsp = TSP(distance_matrix, localities)
+    best_route, min_distance = tsp.solve()
+    print_route(best_route, min_distance, localities)
+
+
+
+
+
+""""Graphical User Interface for Python :"""
+
+import tkinter as tk
+from tkinter import messagebox
+import matplotlib.pyplot as plt
+import networkx as nx
+from itertools import permutations
+import math
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+class TSPApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Travelling Salesman Problem")
+        self.root.geometry("1000x700")
+        self.root.configure(bg="turquoise")
+
+        # Header Frame
+        header_frame = tk.Frame(self.root, bg="turquoise")
+        header_frame.pack(fill=tk.X, padx=10, pady=10)
+        header_label = tk.Label(header_frame, text="Travelling Salesman Problem", font=("Script MT Bold", 16), bg="turquoise")
+        header_label.pack(pady=5)
+
+        # Left Frame for Inputs and Buttons
+        left_frame = tk.Frame(self.root, bg="turquoise")
+        left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10)
+
+        # Input Frame for places and distance matrix
+        input_frame = tk.Frame(left_frame, bg="turquoise")
+        input_frame.pack(pady=10)
+
+        places_label = tk.Label(input_frame, text="Places (comma-separated):", font=("Script MT Bold", 12), bg="turquoise")
+        places_label.grid(row=0, column=0, padx=5, pady=5)
+        self.places_entry = tk.Entry(input_frame)
+        self.places_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        matrix_label = tk.Label(input_frame, text="Distance Matrix (comma-separated rows by semicolon):", font=("Script MT Bold", 12), bg="turquoise")
+        matrix_label.grid(row=1, column=0, padx=5, pady=5)
+        self.matrix_entry = tk.Entry(input_frame)
+        self.matrix_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        # Buttons for actions
+        button_frame = tk.Frame(left_frame, bg="turquoise")
+        button_frame.pack(pady=10)
+
+        solve_tsp_btn = tk.Button(button_frame, text="Solve TSP", command=self.solve_tsp, font=("Script MT Bold", 12))
+        solve_tsp_btn.grid(row=0, column=0, padx=5, pady=5)
+
+        display_graph_btn = tk.Button(button_frame, text="Display TSP Route", command=self.visualize_tsp_route, font=("Script MT Bold", 12))
+        display_graph_btn.grid(row=0, column=1, padx=5, pady=5)
+
+        quit_btn = tk.Button(button_frame, text="Quit", command=self.root.quit, font=("Script MT Bold", 12))
+        quit_btn.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
+
+        # Right Frame for Canvas
+        self.canvas_frame = tk.Frame(self.root, bg="turquoise")
+        self.canvas_frame.pack(side=tk.RIGHT, padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+        # Placeholder for result label
+        self.result_label = tk.Label(left_frame, text="", font=("Script MT Bold", 12), bg="turquoise")
+        self.result_label.pack(pady=10)
+
+    def solve_tsp(self):
+        forts = self.places_entry.get().split(',')
+        forts = [fort.strip() for fort in forts if fort.strip()]
+        num_forts = len(forts)
+
+        matrix_input = self.matrix_entry.get()
+        try:
+            distance_matrix = [[int(x) for x in row.split(',')] for row in matrix_input.split(';')]
+            if len(distance_matrix) != num_forts or any(len(row) != num_forts for row in distance_matrix):
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Input Error", "Invalid distance matrix input. Check the format.")
+            return
+
+        tsp = TSP(distance_matrix, forts)
+        best_route, min_distance = tsp.solve()
+        route_str = " -> ".join([forts[i] for i in best_route])
+        self.result_label.config(text=f"Optimal Route: {route_str}\nTotal Distance: {min_distance}")
+        self.best_route = best_route
+        self.distance_matrix = distance_matrix
+        self.forts = forts
+        self.min_distance = min_distance
+
+    def visualize_tsp_route(self):
+        if not hasattr(self, 'best_route'):
+            messagebox.showerror("Error", "Solve the TSP first.")
+            return
+
+        figure = plt.Figure(figsize=(5, 5), dpi=100)
+        canvas = FigureCanvasTkAgg(figure, self.canvas_frame)
+        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        ax = figure.add_subplot(111)
+        G = nx.Graph()
+
+        for i, fort in enumerate(self.forts):
+            G.add_node(i, label=fort)
+
+        for i in range(len(self.best_route) - 1):
+            G.add_edge(self.best_route[i], self.best_route[i + 1], weight=self.distance_matrix[self.best_route[i]][self.best_route[i + 1]])
+
+        G.add_edge(self.best_route[-1], self.best_route[0], weight=self.distance_matrix[self.best_route[-1]][self.best_route[0]])
+
+        pos = nx.circular_layout(G)
+        nx.draw_networkx_nodes(G, pos, node_size=700, node_color='lightblue', ax=ax)
+        nx.draw_networkx_edges(G, pos, edgelist=G.edges(), width=2, edge_color='gray', ax=ax)
+        edge_labels = {(u, v): f"{G[u][v]['weight']}" for u, v in G.edges()}
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, ax=ax)
+        nx.draw_networkx_labels(G, pos, labels={i: fort for i, fort in enumerate(self.forts)}, font_size=12, ax=ax)
+        ax.set_title(f"Optimal TSP Route (Total Distance: {self.min_distance})")
+        ax.axis('off')
+        canvas.draw()
+
+class TSP:
+    def __init__(self, distance_matrix, forts):
+        self.distance_matrix = distance_matrix
+        self.num_cities = len(distance_matrix)
+        self.forts = forts
+
+    def calculate_total_distance(self, route):
+        total_distance = 0
+        for i in range(len(route) - 1):
+            total_distance += self.distance_matrix[route[i]][route[i + 1]]
+        total_distance += self.distance_matrix[route[-1]][route[0]]
+        return total_distance
+
+    def solve(self):
+        min_distance = math.inf
+        best_route = None
+        for perm in permutations(range(self.num_cities)):
+            current_distance = self.calculate_total_distance(perm)
+            if current_distance < min_distance:
+                min_distance = current_distance
+                best_route = perm
+        return best_route, min_distance
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = TSPApp(root)
+    root.mainloop()
+
+
+
+
+
+#Link for google colab : https://colab.research.google.com/drive/18CkxNm1UJPaUTn_TtO_RKhp6h94IzkIQ?usp=sharing
