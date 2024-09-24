@@ -1,0 +1,401 @@
+#CREATING AND IMPLEMENTING HASH TABLE TO HANDLE COLLISION USING OVERFLOW CHAINING
+
+
+
+"""Basic reference code :"""
+
+class Node:
+    def __init__(self, key, value):
+        """Node for the linked list used in overflow chaining."""
+        self.key = key
+        self.value = value
+        self.next = None
+
+class HashTable:
+    def __init__(self, size):
+        """Initialize the hash table with a given size."""
+        self.size = size
+        self.table = [None] * size
+
+    def hash_function(self, key):
+        """Hash function to determine the index for a given key."""
+        return key % self.size
+
+    def insert(self, key, value):
+        """Insert a key-value pair into the hash table."""
+        index = self.hash_function(key)
+        new_node = Node(key, value)
+
+        if self.table[index] is None:
+            self.table[index] = new_node
+        else:
+            current = self.table[index]
+            while current.next:
+                current = current.next
+            current.next = new_node
+
+    def delete(self, key):
+        """Delete the value associated with the given key."""
+        index = self.hash_function(key)
+        current = self.table[index]
+        prev = None
+
+        while current:
+            if current.key == key:
+                if prev:
+                    prev.next = current.next
+                else:
+                    self.table[index] = current.next
+                return
+            prev = current
+            current = current.next
+
+    def search(self, key):
+        """Search for the value associated with the given key."""
+        index = self.hash_function(key)
+        current = self.table[index]
+
+        while current:
+            if current.key == key:
+                return current.value
+            current = current.next
+
+        return None
+
+    def traverse(self):
+        """Traverse and print all key-value pairs in the hash table."""
+        for index, node in enumerate(self.table):
+            current = node
+            while current:
+                print(f"Index {index}: Key {current.key}, Value {current.value}")
+                current = current.next
+
+# Example Usage
+if __name__ == "__main__":
+    # Create a hash table with a fixed size of 10
+    hash_table = HashTable(size=10)
+
+    # Insert some values
+    hash_table.insert(1, "Value for key 1")
+    hash_table.insert(2, "Value for key 2")
+    hash_table.insert(12, "Value for key 12")  # This will go to the same index as key 2
+
+    # Traverse and print the hash table
+    print("Hash Table after insertions:")
+    hash_table.traverse()
+
+    # Search for values
+    print("\nSearching for key 2:")
+    print(hash_table.search(2))  # Should print: Value for key 2
+
+    print("Searching for key 1:")
+    print(hash_table.search(1))  # Should print: Value for key 1
+
+    print("Searching for key 12:")
+    print(hash_table.search(12))  # Should print: Value for key 12
+
+    # Delete a value
+    hash_table.delete(2)
+
+    # Traverse and print the hash table after deletion
+    print("\nHash Table after deletion:")
+    hash_table.traverse()
+
+    # Search for deleted key
+    print("\nSearching for deleted key 2:")
+    print(hash_table.search(2))  # Should print: None
+
+
+
+
+
+
+"""Command Line Interface for Python :"""
+
+class Node:
+    def __init__(self, key, value):
+        """Node for the linked list used in overflow chaining."""
+        self.key = key
+        self.value = value
+        self.next = None
+
+class HashTable:
+    def size(self, size):
+        """Initialize the hash table with a given size."""
+        self.size = size
+        self.table = [None] * size
+
+    def hash_function(self, key):
+        """Hash function to determine the index for a given key."""
+        return key % self.size
+
+    def insert(self, key, value):
+        """Insert a key-value pair into the hash table."""
+        index = self.hash_function(key)
+        new_node = Node(key, value)
+
+        if self.table[index] is None:
+            self.table[index] = new_node
+        else:
+            current = self.table[index]
+            while current.next:
+                current = current.next
+            current.next = new_node
+
+    def delete(self, key):
+        """Delete the value associated with the given key."""
+        index = self.hash_function(key)
+        current = self.table[index]
+        prev = None
+
+        while current:
+            if current.key == key:
+                if prev:
+                    prev.next = current.next
+                else:
+                    self.table[index] = current.next
+                return
+            prev = current
+            current = current.next
+
+    def search(self, key):
+        """Search for the value associated with the given key."""
+        index = self.hash_function(key)
+        current = self.table[index]
+
+        while current:
+            if current.key == key:
+                print(current.value)
+            current = current.next
+
+        return None
+
+    def traverse(self):
+        """Traverse and print all key-value pairs in the hash table."""
+        for index, node in enumerate(self.table):
+            current = node
+            while current:
+                print(f"Index {index}: Key {current.key}, Value {current.value}")
+                current = current.next
+
+def operation():
+    ht = HashTable()
+    while True:
+        print("----------------Hash Table----------------")
+        print("S074 kermeen deboo")
+        print(" 1.Size of Table\n 2.Insert into Table\n 3.Delete an Element\n 4.Search\n 5.Traverse\n 6.Exit")
+        choice = int(input("Enter your choice(1-6): "))
+        if choice == 1:
+            size = int(input("Enter the size of array: "))
+            ht.size(size)
+        elif choice == 2:
+            key=int(input("Enter the key: "))
+            value=input("Enter the Value for the key: ")
+            ht.insert(key, value)
+        elif choice == 3:
+            key=int(input("Enter the key: "))
+            ht.delete(key)
+        elif choice == 4:
+            key=int(input("Enter the key: "))
+            ht.search(key)
+        elif choice == 5:
+            ht.traverse()
+        elif choice == 6:
+            print("Exiting....")
+            break
+        else:
+            print("Invalid choice.")
+operation()
+
+
+
+
+
+
+"""Graphical User Interface for Python :"""
+
+import tkinter as tk
+from tkinter import messagebox
+
+class Node:
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.next = None
+
+class HashTable:
+    def __init__(self, size):
+        self.size = size
+        self.table = [None] * size
+
+    def hash_function(self, key):
+        return key % self.size
+
+    def insert(self, key, value):
+        index = self.hash_function(key)
+        new_node = Node(key, value)
+
+        if self.table[index] is None:
+            self.table[index] = new_node
+        else:
+            current = self.table[index]
+            while current.next:
+                current = current.next
+            current.next = new_node
+
+    def delete(self, key):
+        index = self.hash_function(key)
+        current = self.table[index]
+        prev = None
+
+        while current:
+            if current.key == key:
+                if prev:
+                    prev.next = current.next
+                else:
+                    self.table[index] = current.next
+                return
+            prev = current
+            current = current.next
+
+    def search(self, key):
+        index = self.hash_function(key)
+        current = self.table[index]
+        while current:
+            if current.key == key:
+                return current.value
+            current = current.next
+        return None
+
+    def traverse(self):
+        all_elements = []
+        for index, node in enumerate(self.table):
+            current = node
+            while current:
+                all_elements.append(f"Index {index}: Key {current.key}, Value {current.value}")
+                current = current.next
+        return all_elements
+
+
+class HashTableApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Hash Table")
+        self.root.geometry("800x600")
+        self.root.configure(bg="turquoise")
+        self.hash_table = None
+
+        header_frame = tk.Frame(self.root, bg="turquoise")
+        header_frame.pack(fill=tk.X, padx=10, pady=10)
+        header_label = tk.Label(header_frame, text="Hash Table Application", font=("Script MT Bold", 16), bg="turquoise")
+        header_label.pack(pady=5)
+
+        input_frame = tk.Frame(self.root, bg="turquoise")
+        input_frame.pack(pady=10)
+
+        size_label = tk.Label(input_frame, text="Table Size:", font=("Script MT Bold", 12), bg="turquoise")
+        size_label.grid(row=0, column=0, padx=5, pady=5)
+        self.size_entry = tk.Entry(input_frame)
+        self.size_entry.grid(row=0, column=1, padx=5, pady=5)
+        set_size_button = tk.Button(input_frame, text="Set Size", command=self.set_table_size, font=("Script MT Bold", 12))
+        set_size_button.grid(row=0, column=2, padx=5, pady=5)
+
+        key_label = tk.Label(input_frame, text="Key:", font=("Script MT Bold", 12), bg="turquoise")
+        key_label.grid(row=1, column=0, padx=5, pady=5)
+        self.key_entry = tk.Entry(input_frame)
+        self.key_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        value_label = tk.Label(input_frame, text="Value:", font=("Script MT Bold", 12), bg="turquoise")
+        value_label.grid(row=2, column=0, padx=5, pady=5)
+        self.value_entry = tk.Entry(input_frame)
+        self.value_entry.grid(row=2, column=1, padx=5, pady=5)
+
+        button_frame = tk.Frame(self.root, bg="turquoise")
+        button_frame.pack(pady=10)
+
+        insert_btn = tk.Button(button_frame, text="Insert", command=self.insert_value, font=("Script MT Bold", 12))
+        insert_btn.grid(row=0, column=0, padx=5, pady=5)
+
+        delete_btn = tk.Button(button_frame, text="Delete", command=self.delete_value, font=("Script MT Bold", 12))
+        delete_btn.grid(row=0, column=1, padx=5, pady=5)
+
+        search_btn = tk.Button(button_frame, text="Search", command=self.search_value, font=("Script MT Bold", 12))
+        search_btn.grid(row=0, column=2, padx=5, pady=5)
+
+        traverse_btn = tk.Button(button_frame, text="Traverse", command=self.traverse_table, font=("Script MT Bold", 12))
+        traverse_btn.grid(row=0, column=3, padx=5, pady=5)
+
+        quit_btn = tk.Button(button_frame, text="Quit", command=self.root.quit, font=("Script MT Bold", 12))
+        quit_btn.grid(row=0, column=4, padx=5, pady=5)
+
+        self.output_frame = tk.Frame(self.root, bg="turquoise")
+        self.output_frame.pack(pady=10)
+
+        self.output_text = tk.Text(self.output_frame, height=10, width=60, font=("Script MT Bold", 12))
+        self.output_text.pack()
+
+    def set_table_size(self):
+        size = self.size_entry.get()
+        if size.isdigit():
+            self.hash_table = HashTable(int(size))
+            messagebox.showinfo("Info", f"Hash table of size {size} created.")
+        else:
+            messagebox.showwarning("Warning", "Please enter a valid size.")
+
+    def insert_value(self):
+        if self.hash_table:
+            key = self.key_entry.get()
+            value = self.value_entry.get()
+            if key.isdigit():
+                self.hash_table.insert(int(key), value)
+                messagebox.showinfo("Info", f"Inserted key {key} with value {value}.")
+            else:
+                messagebox.showwarning("Warning", "Key must be an integer.")
+        else:
+            messagebox.showwarning("Warning", "Please set the table size first.")
+
+    def delete_value(self):
+        if self.hash_table:
+            key = self.key_entry.get()
+            if key.isdigit():
+                self.hash_table.delete(int(key))
+                messagebox.showinfo("Info", f"Deleted key {key}.")
+            else:
+                messagebox.showwarning("Warning", "Key must be an integer.")
+        else:
+            messagebox.showwarning("Warning", "Please set the table size first.")
+
+    def search_value(self):
+        if self.hash_table:
+            key = self.key_entry.get()
+            if key.isdigit():
+                value = self.hash_table.search(int(key))
+                if value:
+                    messagebox.showinfo("Info", f"Found value: {value} for key {key}.")
+                else:
+                    messagebox.showinfo("Info", f"Key {key} not found.")
+            else:
+                messagebox.showwarning("Warning", "Key must be an integer.")
+        else:
+            messagebox.showwarning("Warning", "Please set the table size first.")
+
+    def traverse_table(self):
+        if self.hash_table:
+            elements = self.hash_table.traverse()
+            self.output_text.delete(1.0, tk.END)
+            if elements:
+                self.output_text.insert(tk.END, "\n".join(elements))
+            else:
+                self.output_text.insert(tk.END, "Hash table is empty.")
+        else:
+            messagebox.showwarning("Warning", "Please set the table size first.")
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = HashTableApp(root)
+    root.mainloop()
+
+
+
+
+
+#Link for google colab : https://colab.research.google.com/drive/1500yap8dujgTJhOeQO2PHVHRxNIiqcdA?usp=sharing
