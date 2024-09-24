@@ -1,4 +1,7 @@
 #IMPLEMENTING ABSTRACT DATA TYPE (ADT)
+
+
+
 """ Basic Reference Code :"""
 
 class Stack:
@@ -41,6 +44,9 @@ stack.push(4)
 stack.push(5)
 stack.push(6)
 stack.display()
+
+
+
 
 
 """ Command Line Interface for Python :"""
@@ -117,6 +123,9 @@ def queue_operations():
 # Main function to run the program
 if __name__ == "__main__":
     queue_operations()
+
+
+
 
 
 """Graphical User Interface for Python:"""
