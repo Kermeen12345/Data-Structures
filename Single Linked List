@@ -1,6 +1,9 @@
 #IMPLEMENTING SINGLY LINKED LIST WITH INSERTION, DELETION, TRANSVERSAL
 
+
+
 """Basic reference code :"""
+
 class Node:
   """
   A class to represent a node in a singly linked list
@@ -137,7 +140,10 @@ linked_list.traverse()
 
 
 
+
+
 """Command Line Interface for Python :"""
+
 # Function to check if the linked list is empty
 def is_empty(head):
     return head is None
@@ -266,7 +272,9 @@ linked_list_operation()
 
 
 
+
 """Graphical User Interface for Python :"""
+
 from tkinter import *
 from tkinter import messagebox
 
@@ -423,6 +431,9 @@ def run_linked_list_app():
 
 if __name__ == "__main__":
     run_linked_list_app()
+
+
+
 
 
 #Link for google colab : https://colab.research.google.com/drive/1gMJi8BqDMvkLqHl94dACkjq7yE_Xzfbo?usp=sharing
