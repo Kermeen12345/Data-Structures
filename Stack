@@ -1,0 +1,305 @@
+#IMPLEMENTING STACK DATA STRUCTURE WITH INSERTION, DELETION, TRANSVERSAL OPERATIONS
+
+""" Reference Code :"""
+
+class Stack:
+  """
+  A class to represent a stack
+
+  Attributes:
+      items: A list to store the stack elements
+  """
+
+  def __init__(self):
+    """
+    Initializes the stack with an empty list
+    """
+    self.items = []
+
+  def is_empty(self):
+    """
+    Returns True if the stack is empty, False otherwise
+
+    Returns:
+        bool: True if the stack is empty, False otherwise
+    """
+    return len(self.items) == 0
+
+  def push(self, data):
+    """
+    Inserts an element onto the top of the stack
+
+    Args:
+        data: The element to be inserted
+    """
+    self.items.append(data)
+
+  def pop(self):
+    """
+    Removes and returns the element from the top of the stack
+
+    Returns:
+        The element that was popped, or None if the stack is empty
+    """
+    if self.is_empty():
+      return None
+    return self.items.pop()
+
+  def peek(self):
+    """
+    Returns the element at the top of the stack without removing it
+
+    Returns:
+        The element at the top of the stack, or None if the stack is empty
+    """
+    if self.is_empty():
+      return None
+    return self.items[-1]
+
+  def size(self):
+    """
+    Returns the number of elements in the stack
+
+    Returns:
+        int: The number of elements in the stack
+    """
+    return len(self.items)
+
+  def print_stack(self):
+    """
+    Prints the elements of the stack from top to bottom
+    """
+    print("Stack elements:")
+    for item in self.items[::-1]:
+      print(item)
+
+
+# Create a stack
+stack = Stack()
+
+# Test stack operations
+stack.push(10)
+stack.push(20)
+stack.push(30)
+print("Peek element: ",stack.peek())
+
+print("Stack size:", stack.size())
+print("Popped element:", stack.pop())
+
+stack.print_stack()
+
+
+
+
+
+""" Command Line Interface for Python :"""
+
+class Stack:
+    def __init__(self):
+        self.array = []
+        self.size = int(input("Enter the Length of Stack:"))
+        self.top = -1  # stack is empty
+
+    def is_empty(self):
+        return len(self.array) == 0
+
+    def push(self, element):
+        # Check Overflow or Stack is Full
+        if self.top >= self.size - 1:
+            print("Stack Full.")
+        else:
+            self.top += 1
+            self.array.append(element)
+            print(f"{element} pushed to stack")
+
+
+    def pop(self):
+        # Check Underflow or Stack Empty
+        if self.is_empty():
+            print("Stack Empty.")
+            return None
+        else:
+            element = self.array[self.top]
+            self.array.remove(element)
+            self.top -= 1
+            return element
+
+    def peek(self):
+        if self.top == -1:
+            return None
+        else:
+            return self.array[self.top]
+
+    def display(self):
+        print(self.array)
+
+def stack_operations():
+    stack = Stack()
+    while True:
+        print("\n Stack Operations \n 1.Push \n 2.Pop \n 3.Peek \n 4.Is Empty \n 5.Display \n 6.Exit")
+
+        choice = input("Enter your choice(1-5): ")
+
+        if choice == '1':
+            element = input("Enter the element: ")
+            stack.push(element)
+
+        elif choice == '2':
+            try:
+                element = stack.pop()
+                print(f"{element} poped from stack")
+            except IndexError as i:
+                print(i)
+
+        elif choice == '3':
+            try:
+                element = stack.peek()
+                print(f"Top element in stack : {element} ")
+            except IndexError as i:
+                print(i)
+
+        elif choice == '4':
+            if stack.is_empty():
+                print("Stack is empty")
+            else:
+                print("Stack is not empty")
+
+        elif choice == '5':
+            stack.display()
+
+        elif choice == '6':
+            print("existing")
+            break
+
+        else:
+            print("Invalid choice. Please enter a number between 1 and 5.")
+
+if __name__ == '__main__':
+    stack_operations()
+
+
+
+""" Graphical User Interface for Python :"""
+from tkinter import *
+from tkinter import messagebox
+
+# Initialize the main window
+root = Tk()
+root.title("Practical 1")
+root.state("zoomed")
+root['bg'] = 'light blue'
+
+# Configuring row and column weights for better layout management
+root.columnconfigure((0, 1, 2, 3, 4, 5), weight=10)
+root.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+
+# Add a label to display 'Stack Data Structure' at the top center
+title_label = Label(root, text="Stack Data Structure", font=("Script MT Bold", 24), bg='cyan')
+title_label.grid(row=0, column=0, columnspan=6, pady=10)
+
+# Stack size input label and entry
+size_label = Label(root, text="Enter stack size:", font=("Script MT Bold", 14), bg='cyan')
+size_label.grid(row=1, column=0, ipadx=6, ipady=6, padx=10, sticky=E)
+
+size_entry = Entry(root, font=("Script MT Bold", 14))
+size_entry.grid(row=1, column=1, ipadx=5, ipady=5, padx=5, sticky=W)
+
+# Stack operations input label and entry
+input_label = Label(root, text="Enter the number:", font=("Script MT Bold", 14), bg='cyan')
+input_label.grid(row=2, column=0, ipadx=7, ipady=7, padx=10, sticky=E)
+
+input_entry = Entry(root, font=("Script MT Bold", 14))
+input_entry.grid(row=2, column=1, ipadx=5, ipady=5, padx=5, sticky=W)
+
+# Buttons for stack operations
+def push():
+    """Function to push an element onto the stack."""
+    global stack_top
+    if stack_top < stack_size:
+        item = input_entry.get()
+        if item:
+            stack.append(item)
+            input_entry.delete(0, END)
+            draw_stack()
+            stack_top += 1
+        else:
+            messagebox.showwarning("Warning", "Please enter a number")
+    else:
+        messagebox.showwarning("Warning", "Stack Overflow")
+
+def pop():
+    """Function to pop an element from the stack."""
+    global stack_top
+    if stack:
+        stack.pop()
+        draw_stack()
+        stack_top -= 1
+    else:
+        messagebox.showwarning("Warning", "Stack Underflow")
+
+def peek():
+    """Function to peek at the top element of the stack."""
+    if stack:
+        top_item = stack[-1]
+        messagebox.showinfo("Peek", f"Top item: {top_item}")
+    else:
+        messagebox.showwarning("Warning", "Stack is empty")
+
+def is_empty():
+    """Function to check if the stack is empty."""
+    if stack:
+        messagebox.showinfo("Is Empty", "Stack is not empty")
+    else:
+        messagebox.showinfo("Is Empty", "Stack is empty")
+
+push_button = Button(root, text="Push", font=("Script MT Bold", 14), command=push)
+push_button.grid(row=2, column=2, ipadx=5, ipady=5, padx=5, sticky=W)
+
+pop_button = Button(root, text="Pop", font=("Script MT Bold", 14), command=pop)
+pop_button.grid(row=2, column=3, ipadx=5, ipady=5, padx=5, sticky=W)
+
+peek_button = Button(root, text="Peek", font=("Script MT Bold", 14), command=peek)
+peek_button.grid(row=2, column=4, ipadx=5, ipady=5, padx=5, sticky=W)
+
+is_empty_button = Button(root, text="Is Empty", font=("Script MT Bold", 14), command=is_empty)
+is_empty_button.grid(row=2, column=5, ipadx=5, ipady=5, padx=5, sticky=W)
+
+# Canvas to visualize the stack
+canvas = Canvas(root, width=600, height=400, bg='white')
+canvas.grid(row=3, column=0, columnspan=6, padx=10, pady=10)
+
+# Initialize stack and related variables
+stack = []
+stack_top = 0
+stack_size = 5  # Default stack size
+item_height = 40  # Height of each stack item in the visualization
+
+def draw_stack():
+    """Function to draw the stack on the canvas."""
+    canvas.delete("all")
+    y = 400
+    for item in stack:
+        canvas.create_rectangle(200, y - item_height, 400, y, fill="dark turquoise")
+        canvas.create_text(300, y - item_height // 2, text=item, font=("Script MT Bold", 16))
+        y -= item_height
+
+def set_stack_size():
+    """Function to set the stack size based on user input."""
+    global stack_size
+    try:
+        stack_size = int(size_entry.get())
+        if stack_size <= 0:
+            raise ValueError
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid positive integer for stack size")
+
+# Add a button to set the stack size
+set_size_button = Button(root, text="Set Stack Size", font=("Script MT Bold", 14), command=set_stack_size)
+set_size_button.grid(row=1, column=2, ipadx=5, ipady=5, padx=5, sticky=W)
+
+# Run the main loop
+root.mainloop()
+
+
+
+#Link for google colab : https://colab.research.google.com/drive/14QiwB1ZCn4MzVxC2JOnb7jc5dvg0KI_V?usp=sharing
