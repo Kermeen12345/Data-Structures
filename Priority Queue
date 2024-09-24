@@ -1,0 +1,272 @@
+#IMPLEMENTING PRIORITY QUEUE WITH INSERTION, DELETION, TRAVERSAL
+
+
+
+"""Basic reference code :"""
+
+class PriorityQueue:
+    def __init__(self):
+        self.queue = []
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def enqueue(self, item, priority):
+        self.queue.append((item, priority))
+        self.queue.sort(key=lambda x: x[1])  # Sort by priority
+        print(f"Enqueued: {item} with priority {priority}")
+
+    def dequeue(self):
+        if self.is_empty():
+            print("Priority Queue is empty. Cannot dequeue.")
+            return None
+        item = self.queue.pop(0)[0]  # Remove and return the item with highest priority (lowest value)
+        print(f"Dequeued: {item}")
+        return item
+
+    def traverse(self):
+        if self.is_empty():
+            print("Priority Queue is empty.")
+        else:
+            print("Priority Queue contains:")
+            for item, priority in self.queue:
+                print(f"Item: {item}, Priority: {priority}")
+
+# Example usage:
+if __name__ == "__main__":
+    pq = PriorityQueue()
+
+    # Enqueue elements
+    pq.enqueue("Task1", 3)
+    pq.enqueue("Task2", 1)
+    pq.enqueue("Task3", 2)
+
+    # Traverse elements
+    pq.traverse()
+
+    # Dequeue elements
+    pq.dequeue()
+    pq.dequeue()
+
+    # Traverse elements
+    pq.traverse()
+
+    # Dequeue elements
+    pq.dequeue()
+
+    # Attempt to dequeue from an empty queue
+    pq.dequeue()
+
+
+
+
+
+"""Command Line Interface for Python :"""
+
+#Initialize the queue and its size
+def initialize_queue():
+    queue = []
+    size = int(input("Enter the size of queue : "))
+    return queue,size
+
+#Checking if the queue is empty
+def is_empty(queue):
+    return len(queue) == 0
+
+#Adding elements to the queue
+def enqueue(queue,size,process,priority):
+    if len(queue) >= size : #Checking overflow condition
+        print("Priority queue is full")
+    else:
+        queue.append((process,priority))
+        queue.sort(key=lambda x: x[1]) #Sorting priority
+        print(f"Enqueued : {process} with priority {priority}")
+
+#Removing element with highest priority(lowest value)
+def dequeue(queue):
+    if is_empty(queue): #Checking underflow condition
+        print("Priority queue is empty")
+    else:
+        process = queue.pop(0)[0]
+        print("Dequeue :",process)
+
+#Printing all the processes in queue along with their priorities
+def traverse(queue):
+    if is_empty(queue):
+        print("Priority queue is empty")
+    else:
+        print("Priority queue contains :")
+        for process, priority in queue:
+            print(f"Process : {process}, Priority : {priority}")
+
+#Listing functions of queue
+def queue_operations():
+    queue,size = initialize_queue()
+    while True :
+        print("----------Priority Queue----------")
+        print("\n Priority Queue Operations : \n1. Is Empty \n2. Enqueue \n3. Dequeue \n4. Traverse \n5. Exit")
+        choice = input("Enter your choice (1-5) : ")
+
+        if choice == '1':
+            if is_empty(queue):
+                print("Queue is empty")
+            else:
+                print("Queue is not empty")
+
+        elif choice == '2':
+            process = input("Enter the process : ")
+            priority = int(input("Enter the priority of process : "))
+            enqueue(queue,size,process,priority)
+
+        elif choice == '3':
+            dequeue(queue)
+
+        elif choice == '4':
+            traverse(queue)
+
+        elif choice == '5':
+            print("Exiting...")
+            break
+
+        else :
+            print("Invalid choice number. Enter choice number between 1-5")
+
+#Running the program
+if __name__ == "__main__":
+    queue_operations()
+
+
+
+
+
+"""Graphical User Interface for Python :"""
+
+from tkinter import *
+from tkinter import messagebox
+
+# Initialize the priority queue
+queue = []
+queue_size = 0
+
+# Function to check if the queue is empty
+def is_empty():
+    return len(queue) == 0
+
+# Function to check if the queue is full
+def is_full():
+    return len(queue) >= queue_size
+
+# Function to set the size of the queue
+def set_queue_size():
+    global queue_size
+    try:
+        size = int(size_entry.get().strip())
+        if size <= 0:
+            messagebox.showerror("Error", "Queue size must be greater than zero")
+        else:
+            queue_size = size
+            messagebox.showinfo("Info", f"Queue size set to {size}")
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid number for the size")
+
+# Function to enqueue an element into the queue
+def enqueue_element():
+    try:
+        process = entry.get().strip()
+        priority = int(priority_entry.get().strip())
+        if process:
+            if is_full():
+                raise OverflowError("Priority Queue is full")
+            else:
+                queue.append((process, priority))
+                queue.sort(key=lambda x: x[1])
+                entry.delete(0, END)
+                priority_entry.delete(0, END)
+                update_status(f"Enqueued: {process} with priority {priority}")
+                draw_queue()
+        else:
+            messagebox.showwarning("Warning", "Process cannot be empty")
+    except ValueError:
+        messagebox.showwarning("Warning", "Please enter a valid priority")
+    except OverflowError:
+        messagebox.showerror("Error", "Priority Queue is full")
+
+# Function to dequeue an element from the queue
+def dequeue_element():
+    try:
+        if not is_empty():
+            process = queue.pop(0)[0]
+            update_status(f"Dequeued: {process}")
+            draw_queue()
+        else:
+            raise IndexError("dequeue from empty priority queue")
+    except IndexError:
+        messagebox.showwarning("Warning", "Priority Queue is empty")
+
+# Function to traverse and display the elements in the queue
+def traverse_queue():
+    elements = queue
+    if elements:
+        update_status(f"Queue elements: {' -> '.join(f'{process}({priority})' for process, priority in elements)}")
+    else:
+        update_status("Priority Queue is empty")
+    draw_queue()
+
+# Function to update the status label
+def update_status(message):
+    status_label.config(text=message)
+
+# Function to display the current state of the queue
+def draw_queue():
+    elements = queue
+    if elements:
+        queue_str = " -> ".join(f"{process}({priority})" for process, priority in elements)
+        queue_display_label.config(text=f"Queue: {queue_str}")
+    else:
+        queue_display_label.config(text="Queue: ")
+
+# Initialize the Tkinter window
+root = Tk()
+root.title("Priority Queue")
+root.configure(bg='#00FFFF')  # Change background color to cyan
+
+# GUI Elements
+Label(root, text="Priority Queue Data Structure", font=("Script MT Bold", 20), bg="#00FFFF").grid(row=0, column=0, columnspan=6, pady=10)
+
+# Set size row
+Label(root, text="Enter size of queue:", font=("Script MT Bold", 14), bg="#00FFFF").grid(row=2, column=0, padx=10, pady=10, sticky=W)
+size_entry = Entry(root, width=20, font=("Arial", 14))
+size_entry.grid(row=2, column=1, padx=10, pady=10)
+Button(root, text="Set Size", font=("Arial", 14), command=set_queue_size).grid(row=2, column=2, padx=10, pady=10)
+
+# Enqueue row
+Label(root, text="Enter process:", font=("Script MT Bold", 14), bg="#00FFFF").grid(row=3, column=0, padx=10, pady=10, sticky=W)
+entry = Entry(root, width=20, font=("Arial", 14))
+entry.grid(row=3, column=1, padx=10, pady=10)
+
+# Priority row
+Label(root, text="Enter priority:", font=("Script MT Bold", 14), bg="#00FFFF").grid(row=4, column=0, padx=10, pady=10, sticky=W)
+priority_entry = Entry(root, width=20, font=("Arial", 14))
+priority_entry.grid(row=4, column=1, padx=10, pady=10)
+
+# Buttons row
+Button(root, text="Enqueue", font=("Arial", 14), command=enqueue_element).grid(row=5, column=0, padx=10, pady=10)
+Button(root, text="Dequeue", font=("Arial", 14), command=dequeue_element).grid(row=5, column=1, padx=10, pady=10)
+Button(root, text="Traverse", font=("Arial", 14), command=traverse_queue).grid(row=5, column=2, padx=10, pady=10)
+
+# Status label row
+status_label = Label(root, text="", font=("Arial", 14), bg="#00FFFF")
+status_label.grid(row=6, column=0, columnspan=6, pady=10)
+
+# Queue display label row
+queue_display_label = Label(root, text="", font=("Arial", 14), bg="#00FFFF")
+queue_display_label.grid(row=7, column=0, columnspan=6, pady=10)
+
+# Run the Tkinter main loop
+root.mainloop()
+
+
+
+
+
+#Link for google colab : https://colab.research.google.com/drive/10KtGcX53s8KjW7DSwW9hQ3lZMThCl2j4?usp=sharing
