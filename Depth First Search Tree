@@ -1,0 +1,382 @@
+#IMPLEMENTING DEPTH FIRST SEARCH (DFS) TREE USING GRAPH DATA STRUCTURE
+
+
+
+"""Basic reference code :"""
+
+import matplotlib.pyplot as plt
+import networkx as nx
+from collections import defaultdict
+
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    def dfs_tree(self, start):
+        """Perform DFS and return the Depth-First Tree as a dictionary."""
+        visited = set()
+        dfs_tree = defaultdict(list)
+
+        def dfs(v):
+            visited.add(v)
+            for neighbor in self.graph[v]:
+                if neighbor not in visited:
+                    dfs_tree[v].append(neighbor)
+                    dfs(neighbor)
+
+        dfs(start)
+        return dfs_tree
+
+    def display(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {edges}")
+
+    def visualize(self, dfs_tree=None):
+        """Visualize the graph and optionally the DFS tree."""
+        G = nx.Graph(self.graph)
+
+        pos = nx.spring_layout(G)
+
+        plt.figure(figsize=(12, 6))
+
+        # Draw the original graph
+        plt.subplot(121)
+        nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=1000, font_size=15, font_weight='bold')
+        plt.title("Graph")
+
+        # Draw the DFS Tree
+        if dfs_tree:
+            # Create a graph from the DFS Tree
+            T = nx.DiGraph(dfs_tree)
+            pos_tree = nx.spring_layout(T)
+            plt.subplot(122)
+            nx.draw(T, pos_tree, with_labels=True, node_color='lightgreen', edge_color='blue', node_size=1000, font_size=15, font_weight='bold', arrows=True)
+            plt.title("DFS Tree")
+
+        plt.show()
+
+# Example usage
+if __name__ == "__main__":
+    g = Graph()
+
+    # Add vertices
+    for v in ['A', 'B', 'C', 'D', 'E', 'F']:
+        g.add_vertex(v)
+
+    # Add edges
+    g.add_edge('A', 'B')
+    g.add_edge('A', 'C')
+    g.add_edge('B', 'D')
+    g.add_edge('B', 'E')
+    g.add_edge('C', 'F')
+
+    print("Graph:")
+    g.display()
+
+    # Perform DFS and get the Depth-First Tree
+    start_vertex = 'A'
+    dfs_tree = g.dfs_tree(start_vertex)
+
+    # Visualize the graph and the DFS tree
+    g.visualize(dfs_tree)
+
+
+
+
+
+"""Command Line Interface for Python :"""
+
+import matplotlib.pyplot as plt
+import networkx as nx
+from collections import defaultdict
+
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    def dfs_tree(self, start):
+        """Perform DFS and return the Depth-First Tree as a dictionary."""
+        visited = set()
+        dfs_tree = defaultdict(list)
+
+        def dfs(v):
+            visited.add(v)
+            for neighbor in self.graph[v]:
+                if neighbor not in visited:
+                    dfs_tree[v].append(neighbor)
+                    dfs(neighbor)
+
+        dfs(start)
+        return dfs_tree
+
+    def display(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {edges}")
+
+    def visualize(self, dfs_tree=None):
+        """Visualize the graph and optionally the DFS tree."""
+        G = nx.Graph(self.graph)
+
+        pos = nx.spring_layout(G)
+
+        plt.figure(figsize=(12, 6))
+
+        # Draw the original graph
+        plt.subplot(121)
+        nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=1000, font_size=15, font_weight='bold')
+        plt.title("Graph")
+
+        # Draw the DFS Tree
+        if dfs_tree:
+            # Create a graph from the DFS Tree
+            T = nx.DiGraph(dfs_tree)
+            pos_tree = nx.spring_layout(T)
+            plt.subplot(122)
+            nx.draw(T, pos_tree, with_labels=True, node_color='cyan', edge_color='green', node_size=1000, font_size=15, font_weight='bold', arrows=True)
+            plt.title("DFS Tree")
+
+        plt.show()
+
+# Example usage
+if __name__ == "__main__":
+    g = Graph()
+
+    # Add vertices
+    for v in ['Location 1','Location 2',
+             'Location 3','Location 4']:
+        g.add_vertex(v)
+
+    # Add edges
+    g.add_edge('Location 1', 'Location 2')
+    g.add_edge('Location 2', 'Location 4')
+    g.add_edge('Location 3', 'Location 4')
+    g.add_edge('Location 2', 'Location 3')
+
+    print("Graph:")
+    g.display()
+
+    # Perform DFS and get the Depth-First Tree
+    start_vertex = 'Location 2'
+    dfs_tree = g.dfs_tree(start_vertex)
+
+    # Visualize the graph and the DFS tree
+    g.visualize(dfs_tree)
+
+
+
+
+
+"""Graphical User Interface"""
+
+import tkinter as tk
+from tkinter import messagebox
+import matplotlib.pyplot as plt
+import networkx as nx
+from collections import defaultdict
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+class GraphApp:
+    def __init__(self, root):
+        self.graph = defaultdict(list)
+        self.root = root
+        self.root.title("DFS Tree Using Graph")
+        self.root.geometry("1000x700")
+        self.root.configure(bg="turquoise")
+
+        # Header Frame
+        header_frame = tk.Frame(self.root, bg="turquoise")
+        header_frame.pack(fill=tk.X, padx=10, pady=10)
+        header_label = tk.Label(header_frame, text="Graph DFS Application", font=("Script MT Bold", 16), bg="turquoise")
+        header_label.pack(pady=5)
+
+        # Left Frame for Inputs and Buttons
+        left_frame = tk.Frame(self.root, bg="turquoise")
+        left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10)
+
+        # Input Frame for vertices and edges
+        input_frame = tk.Frame(left_frame, bg="turquoise")
+        input_frame.pack(pady=10)
+
+        vertex_label = tk.Label(input_frame, text="Vertex:", font=("Script MT Bold", 12), bg="turquoise")
+        vertex_label.grid(row=0, column=0, padx=5, pady=5)
+        self.vertex_entry = tk.Entry(input_frame)
+        self.vertex_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        edge_label1 = tk.Label(input_frame, text="Edge (Vertex 1):", font=("Script MT Bold", 12), bg="turquoise")
+        edge_label1.grid(row=1, column=0, padx=5, pady=5)
+        self.edge_entry1 = tk.Entry(input_frame)
+        self.edge_entry1.grid(row=1, column=1, padx=5, pady=5)
+
+        edge_label2 = tk.Label(input_frame, text="Edge (Vertex 2):", font=("Script MT Bold", 12), bg="turquoise")
+        edge_label2.grid(row=2, column=0, padx=5, pady=5)
+        self.edge_entry2 = tk.Entry(input_frame)
+        self.edge_entry2.grid(row=2, column=1, padx=5, pady=5)
+
+        # Buttons for adding/removing vertices and edges
+        button_frame = tk.Frame(left_frame, bg="turquoise")
+        button_frame.pack(pady=10)
+
+        add_vertex_btn = tk.Button(button_frame, text="Add Vertex", command=self.add_vertex_command, font=("Script MT Bold", 12))
+        add_vertex_btn.grid(row=0, column=0, padx=5, pady=5)
+
+        remove_vertex_btn = tk.Button(button_frame, text="Remove Vertex", command=self.remove_vertex_command, font=("Script MT Bold", 12))
+        remove_vertex_btn.grid(row=0, column=1, padx=5, pady=5)
+
+        add_edge_btn = tk.Button(button_frame, text="Add Edge", command=self.add_edge_command, font=("Script MT Bold", 12))
+        add_edge_btn.grid(row=1, column=0, padx=5, pady=5)
+
+        remove_edge_btn = tk.Button(button_frame, text="Remove Edge", command=self.remove_edge_command, font=("Script MT Bold", 12))
+        remove_edge_btn.grid(row=1, column=1, padx=5, pady=5)
+
+        display_btn = tk.Button(button_frame, text="Display Graph", command=self.display_graph, font=("Script MT Bold", 12))
+        display_btn.grid(row=2, column=0, padx=5, pady=5)
+
+        dfs_btn = tk.Button(button_frame, text="DFS Tree", command=self.visualize_dfs_tree, font=("Script MT Bold", 12))
+        dfs_btn.grid(row=2, column=1, padx=5, pady=5)
+
+        quit_btn = tk.Button(button_frame, text="Quit", command=self.root.quit, font=("Script MT Bold", 12))
+        quit_btn.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+
+        # Right Frame for Canvas
+        self.canvas_frame = tk.Frame(self.root, bg="turquoise")
+        self.canvas_frame.pack(side=tk.RIGHT, padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+        else:
+            messagebox.showerror("Error", f"Vertex {vertex} already exists.")
+
+    def remove_vertex(self, vertex):
+        if vertex in self.graph:
+            for adjacent in list(self.graph[vertex]):
+                self.graph[adjacent].remove(vertex)
+            del self.graph[vertex]
+        else:
+            messagebox.showerror("Error", f"Vertex {vertex} does not exist.")
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            if vertex2 not in self.graph[vertex1]:
+                self.graph[vertex1].append(vertex2)
+            if vertex1 not in self.graph[vertex2]:
+                self.graph[vertex2].append(vertex1)
+        else:
+            messagebox.showerror("Error", "One or both vertices not found.")
+
+    def remove_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            if vertex2 in self.graph[vertex1]:
+                self.graph[vertex1].remove(vertex2)
+            if vertex1 in self.graph[vertex2]:
+                self.graph[vertex2].remove(vertex1)
+        else:
+            messagebox.showerror("Error", "One or both vertices not found.")
+
+    def add_vertex_command(self):
+        vertex = self.vertex_entry.get()
+        if vertex:
+            self.add_vertex(vertex)
+            messagebox.showinfo("Info", f"Vertex {vertex} added.")
+            self.vertex_entry.delete(0, tk.END)
+        else:
+            messagebox.showwarning("Warning", "Please enter a vertex.")
+
+    def remove_vertex_command(self):
+        vertex = self.vertex_entry.get()
+        if vertex:
+            self.remove_vertex(vertex)
+            messagebox.showinfo("Info", f"Vertex {vertex} removed.")
+            self.vertex_entry.delete(0, tk.END)
+        else:
+            messagebox.showwarning("Warning", "Please enter a vertex.")
+
+    def add_edge_command(self):
+        vertex1 = self.edge_entry1.get()
+        vertex2 = self.edge_entry2.get()
+        if vertex1 and vertex2:
+            self.add_edge(vertex1, vertex2)
+            messagebox.showinfo("Info", f"Edge between {vertex1} and {vertex2} added.")
+            self.edge_entry1.delete(0, tk.END)
+            self.edge_entry2.delete(0, tk.END)
+        else:
+            messagebox.showwarning("Warning", "Please enter both vertices.")
+
+    def remove_edge_command(self):
+        vertex1 = self.edge_entry1.get()
+        vertex2 = self.edge_entry2.get()
+        if vertex1 and vertex2:
+            self.remove_edge(vertex1, vertex2)
+            messagebox.showinfo("Info", f"Edge between {vertex1} and {vertex2} removed.")
+            self.edge_entry1.delete(0, tk.END)
+            self.edge_entry2.delete(0, tk.END)
+        else:
+            messagebox.showwarning("Warning", "Please enter both vertices.")
+
+    def display_graph(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {edges}")
+
+    def visualize_graph(self):
+        G = nx.Graph(self.graph)
+        pos = nx.spring_layout(G)
+        plt.figure(figsize=(6, 4))
+        nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=1000, font_size=12)
+        plt_canvas = FigureCanvasTkAgg(plt.gcf(), master=self.canvas_frame)
+        plt_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        plt_canvas.draw()
+
+    def dfs_tree(self, start):
+        visited = set()
+        dfs_tree = defaultdict(list)
+
+        def dfs(v):
+            visited.add(v)
+            for neighbor in self.graph[v]:
+                if neighbor not in visited:
+                    dfs_tree[v].append(neighbor)
+                    dfs(neighbor)
+
+        dfs(start)
+        return dfs_tree
+
+    def visualize_dfs_tree(self):
+        start_vertex = self.vertex_entry.get() or list(self.graph.keys())[0]
+        dfs_tree = self.dfs_tree(start_vertex)
+        T = nx.DiGraph(dfs_tree)
+        pos_tree = nx.spring_layout(T)
+        plt.figure(figsize=(6, 4))
+        nx.draw(T, pos_tree, with_labels=True, node_color='cyan', edge_color='green', node_size=1000, font_size=12, arrows=True)
+        plt_canvas = FigureCanvasTkAgg(plt.gcf(), master=self.canvas_frame)
+        plt_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        plt_canvas.draw()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = GraphApp(root)
+    root.mainloop()
+
+
+
+
+
+
+#Link for google colab : https://colab.research.google.com/drive/1O1vTODgy4fbQbMurM5kQYm3bAwnR_nVs?usp=sharing
