@@ -1,6 +1,8 @@
 #IMPLEMENTING STACK DATA STRUCTURE WITH INSERTION, DELETION, TRANSVERSAL OPERATIONS
 
-""" Reference Code :"""
+
+
+"""Basic Reference Code :"""
 
 class Stack:
   """
@@ -179,6 +181,8 @@ if __name__ == '__main__':
 
 
 
+
+
 """ Graphical User Interface for Python :"""
 from tkinter import *
 from tkinter import messagebox
@@ -299,6 +303,7 @@ set_size_button.grid(row=1, column=2, ipadx=5, ipady=5, padx=5, sticky=W)
 
 # Run the main loop
 root.mainloop()
+
 
 
 
