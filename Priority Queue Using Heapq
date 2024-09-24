@@ -1,0 +1,318 @@
+#IMPLEMENTING PRIORITY QUEUE USING LIST AND HEAPQ MODULE 
+
+
+
+"""Baic reference code :"""
+
+#https://docs.python.org/3/library/heapq.html
+import heapq
+
+class PriorityQueue:
+  """
+  This class implements a priority queue using a Python list and the heapq module.
+  Elements are ordered based on their priority (lower value has higher priority).
+  """
+
+  def __init__(self):
+    self.items = []
+
+  def isEmpty(self):
+    """
+    Checks if the priority queue is empty.
+    Returns:
+      True if the queue is empty, False otherwise.
+    """
+    return len(self.items) == 0
+
+  def enqueue(self, item, priority):
+    """
+    Inserts an element with its associated priority into the queue.
+    Lower priority values have higher priority in the queue.
+    Args:
+      item: The element to be added to the queue.
+      priority: The priority of the element. (Lower value means higher priority)
+    """
+    heapq.heappush(self.items, (priority, item))  # store priority and item as a tuple
+
+  def dequeue(self):
+    """
+    Removes and returns the element with the highest priority (lowest value) from the queue.
+    Returns:
+      The element with the highest priority or None if the queue is empty.
+    """
+    if self.isEmpty():
+      return None
+    return heapq.heappop(self.items)[1]  # return only the element from the tuple
+
+  def peek(self):
+    """
+    Returns the element with the highest priority (lowest value) without removing it.
+    Returns:
+      The element with the highest priority or None if the queue is empty.
+    """
+    if self.isEmpty():
+      return None
+    return heapq.nsmallest(1, self.items)[0][1]  # get smallest element (highest priority)
+
+  def size(self):
+    """
+    Returns the number of elements in the priority queue.
+    Returns:
+      The size of the queue.
+    """
+    return len(self.items)
+
+  def traverse(self):
+    """
+    Prints the elements of the priority queue in order of priority (highest to lowest).
+    """
+    print("Priority Queue elements (highest to lowest priority):")
+    for item, _ in self.items:  # access only the element part of the tuple
+      print(item, end=" ")
+    print()
+
+# Example usage
+myPriorityQueue = PriorityQueue()
+
+myPriorityQueue.enqueue("Task A", 1)  # Higher priority (lower value)
+myPriorityQueue.enqueue("Task B", 3)
+myPriorityQueue.enqueue("Task C", 2)
+
+print("Queue size:", myPriorityQueue.size())  # Output: Queue size: 3
+
+print("Dequeued element:", myPriorityQueue.dequeue())  # Output: Dequeued element: Task A
+
+myPriorityQueue.traverse()  # Output: Priority Queue elements (highest to lowest priority): Task C Task B
+
+
+
+
+
+"""Command Line Interface for Python :"""
+
+import heapq
+
+# Function to check if the queue is empty
+def is_empty(queue):
+    return len(queue) == 0
+
+# Function to add an item to the queue with a given priority
+def enqueue(queue, size):
+    if len(queue) >= size:
+        print("Overflow. Cannot Enqueue item")
+        return
+    item = input("Enter the item: ")
+    priority = int(input(f"Enter the priority of {item}: "))
+    heapq.heappush(queue, (priority, item))
+
+# Function to remove and return the item with the highest priority (lowest number)
+def dequeue(queue):
+    if is_empty(queue):
+        print("Underflow. Cannot Dequeue")
+        return None
+    return heapq.heappop(queue)[1]
+
+# Function to return the item with the highest priority without removing it
+def peek(queue):
+    if is_empty(queue):
+        print("Underflow. Cannot Peek")
+        return None
+    return heapq.nsmallest(1, queue)[0][1]
+
+# Function to display all items in the queue
+def traverse(queue):
+    if is_empty(queue):
+        print("Underflow. Cannot Traverse.")
+        return
+    print("Priority Queue elements:")
+    for priority, item in queue:
+        print(f"Priority: {priority} Item: {item}")
+    print()
+
+def main():
+    # Initialize the priority queue
+    queue = []
+    size = int(input("Enter the size of the queue: "))
+
+    while True:
+        # Display menu
+        print("----------------Priority Queue----------------")
+        print("\n1. Is empty\n2. Enqueue\n3. Dequeue\n4. Peek\n5. Traverse\n6. Exit")
+        choice = int(input("Enter your choice: "))
+
+        # Execute the chosen operation
+        if choice == 1:
+            if is_empty(queue):
+                print("Queue is Empty")
+            else:
+                print("Queue is not Empty")
+
+        elif choice == 2:
+            enqueue(queue, size)
+
+        elif choice == 3:
+            item = dequeue(queue)
+            if item:
+                print(f"Dequeued element: {item}")
+
+        elif choice == 4:
+            item = peek(queue)
+            if item:
+                print(f"Peek element: {item}")
+
+        elif choice == 5:
+            traverse(queue)
+
+        elif choice == 6:
+            print("Exiting")
+            break
+
+        else:
+            print("Invalid choice. Enter a valid number.")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+"""Graphical User Interface using Python :"""
+
+import heapq
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+
+# Initialize the priority queue and its size
+queue = []
+queue_size = 0
+
+# Function to set the size of the queue
+def set_size(size):
+    global queue_size
+    queue_size = int(size)
+
+# Function to check if the queue is empty
+def is_empty():
+    return len(queue) == 0
+
+# Function to add an item to the queue with its priority
+def enqueue(item, priority):
+    if len(queue) >= queue_size:
+        return "Overflow. Cannot Enqueue item"
+    heapq.heappush(queue, (int(priority), item))
+    return None
+
+# Function to remove and return the item with the highest priority
+def dequeue():
+    if is_empty():
+        return "Underflow. Cannot Dequeue"
+    return heapq.heappop(queue)[1]
+
+# Function to return the item with the highest priority without removing it
+def peek():
+    if is_empty():
+        return "Underflow. Cannot Peek"
+    return heapq.nsmallest(1, queue)[0][1]
+
+# Function to traverse and return all items in the queue
+def traverse():
+    if is_empty():
+        return "Underflow. Cannot Traverse."
+    return "\n".join(f"Priority: {i} Item: {j}" for i, j in queue)
+
+# Function to handle enqueue operation
+def enqueue_operation():
+    global queue_size
+    if not queue_size:
+        size = size_entry.get()
+        set_size(size)
+    item = get_input("Enter the item:")
+    priority = get_input(f"Enter the priority of {item}:")
+    result = enqueue(item, priority)
+    if result:
+        show_message("Error", result)
+    else:
+        show_message("Success", f"Enqueued: {item} with priority {priority}")
+
+# Function to handle dequeue operation
+def dequeue_operation():
+    result = dequeue()
+    if result.startswith("Underflow"):
+        show_message("Error", result)
+    else:
+        show_message("Success", f"Dequeued: {result}")
+
+# Function to handle peek operation
+def peek_operation():
+    result = peek()
+    if result.startswith("Underflow"):
+        show_message("Error", result)
+    else:
+        show_message("Success", f"Peek: {result}")
+
+# Function to handle traverse operation
+def traverse_operation():
+    result = traverse()
+    output_text.delete(1.0, tk.END)
+    output_text.insert(tk.END, result)
+
+# Function to get input from the user
+def get_input(prompt):
+    return simpledialog.askstring("Input", prompt, parent=root)
+
+# Function to show a message box
+def show_message(title, message):
+    messagebox.showinfo(title, message)
+
+# Set up the Tkinter GUI
+root = tk.Tk()
+root.title("S074 Kermeen")
+root.configure(bg='cyan')
+root.state('zoomed')
+
+# Title Label
+title_label = tk.Label(root, text="Priority Queue Operations", font=('Script MT Bold', 20), bg='cyan')
+title_label.grid(row=0, column=0, columnspan=4, pady=10)
+
+# Size Entry and Label
+size_label = tk.Label(root, text="Queue Size:", font=('Script MT Bold', 20), bg='cyan')
+size_label.grid(row=1, column=0, padx=10, pady=5, sticky='e')
+size_entry = tk.Entry(root, font=('Script MT Bold', 20))
+size_entry.grid(row=1, column=1, padx=10, pady=5, sticky='w')
+
+# Enqueue Button
+enqueue_button = tk.Button(root, text="Enqueue", font=('Script MT Bold', 20), command=enqueue_operation)
+enqueue_button.grid(row=2, column=0, padx=10, pady=5)
+
+# Dequeue Button
+dequeue_button = tk.Button(root, text="Dequeue", font=('Script MT Bold', 20), command=dequeue_operation)
+dequeue_button.grid(row=2, column=1, padx=10, pady=5)
+
+# Peek Button
+peek_button = tk.Button(root, text="Peek", font=('Script MT Bold', 20), command=peek_operation)
+peek_button.grid(row=2, column=2, padx=10, pady=5)
+
+# Traverse Button
+traverse_button = tk.Button(root, text="Traverse", font=('Script MT Bold', 20), command=traverse_operation)
+traverse_button.grid(row=2, column=3, padx=10, pady=5)
+
+# Output Text
+output_text = tk.Text(root, height=15, width=80, font=('Script MT Bold', 16), wrap='word')
+output_text.grid(row=3, column=0, columnspan=4, padx=10, pady=10, sticky='nsew')
+
+# Configure column and row weights
+root.grid_rowconfigure(3, weight=1)
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
+root.grid_columnconfigure(2, weight=1)
+root.grid_columnconfigure(3, weight=1)
+
+# Run the Tkinter main loop
+root.mainloop()
+
+
+
+
+
+#Link for google colab : https://colab.research.google.com/drive/1sUgci9kxVIAdnW4LeIhaC2aju-umcaY7?usp=sharing
