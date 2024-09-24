@@ -1,0 +1,63 @@
+#Python program that allows the user to input family relationships and then uses a tree data structure to represent the family tree.
+
+#How to use the program:
+#1.Run the program.
+#2.Input family relationships in the format parent child.
+
+#For example: John Mary
+
+"""Enter family relationships in the format 'parent child'. Type 'done' when finished.
+John Mary
+John Tom
+Mary Alice
+Tom Bob
+done
+John
+├── Mary
+│   └── Alice
+└── Tom
+    └── Bob
+"""
+
+pip install anytree
+
+from anytree import Node, RenderTree, AsciiStyle
+
+def add_family_member(parent_name, child_name, members):
+    parent_node = members.get(parent_name)
+    if not parent_node:
+        parent_node = Node(parent_name)
+        members[parent_name] = parent_node
+
+    child_node = members.get(child_name)
+    if not child_node:
+        child_node = Node(child_name, parent=parent_node)
+        members[child_name] = child_node
+    else:
+        child_node.parent = parent_node
+
+def input_relationships():
+    members = {}
+    print("Enter family relationships in the format 'parent child'. Type 'done' when finished.")
+    while True:
+        relationship = input()
+        if relationship.lower() == 'done':
+            break
+        parent_name, child_name = relationship.split()
+        add_family_member(parent_name, child_name, members)
+
+    return members
+
+def find_root(members):
+    for node in members.values():
+        if node.is_root:
+            return node
+
+def draw_family_tree():
+    members = input_relationships()
+    root = find_root(members)
+    for pre, fill, node in RenderTree(root, style=AsciiStyle()):
+        print("%s%s" % (pre, node.name))
+
+if __name__ == "__main__":
+    draw_family_tree()
