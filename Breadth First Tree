@@ -1,0 +1,323 @@
+#IMPLEMENTING BREADTH FIRST SEARCH (BFS) TREE USING GRAPH DATA STRUCTURE
+
+
+
+"""Basic reference code :"""
+
+from collections import deque, defaultdict
+
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    def bfs_tree(self, start):
+        """Perform BFS and return the Breadth-First Tree as a dictionary."""
+        visited = set()
+        bfs_tree = defaultdict(list)
+        queue = deque([start])
+        visited.add(start)
+
+        while queue:
+            current = queue.popleft()
+            for neighbor in self.graph[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    bfs_tree[current].append(neighbor)
+                    queue.append(neighbor)
+
+        return bfs_tree
+
+    def display(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {edges}")
+
+def print_bfs_tree(bfs_tree, start):
+    """Print the Breadth-First Tree."""
+    print(f"Breadth-First Tree starting from {start}:")
+    for vertex in bfs_tree:
+        print(f"{vertex}: {bfs_tree[vertex]}")
+
+# Example usage
+if __name__ == "__main__":
+    g = Graph()
+
+    # Add vertices
+    for v in ['A', 'B', 'C', 'D', 'E', 'F']:
+        g.add_vertex(v)
+
+    # Add edges
+    g.add_edge('A', 'B')
+    g.add_edge('A', 'C')
+    g.add_edge('B', 'D')
+    g.add_edge('B', 'E')
+    g.add_edge('C', 'F')
+
+    print("Graph:")
+    g.display()
+
+    # Perform BFS and get the Breadth-First Tree
+    start_vertex = 'A'
+    bfs_tree = g.bfs_tree(start_vertex)
+
+    print_bfs_tree(bfs_tree, start_vertex)
+
+
+
+
+
+"""Command Line Interface for Python :"""
+
+print("S074 Kermeen")
+
+import matplotlib.pyplot as plt
+import networkx as nx
+from collections import deque, defaultdict
+
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    def bfs_tree(self, start):
+        """Perform BFS and return the Breadth-First Tree as a dictionary."""
+        visited = set()
+        bfs_tree = defaultdict(list)
+        queue = deque([start])
+        visited.add(start)
+
+        while queue:
+            current = queue.popleft()
+            for neighbor in self.graph[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    bfs_tree[current].append(neighbor)
+                    queue.append(neighbor)
+
+        return bfs_tree
+
+    def display(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {edges}")
+
+    def visualize(self, bfs_tree=None):
+        """Visualize the graph and optionally the BFS tree."""
+        G = nx.Graph(self.graph)
+
+        pos = nx.spring_layout(G)
+
+        plt.figure(figsize=(12, 6))
+
+        # Draw the original graph
+        plt.subplot(121)
+        nx.draw(G, pos, with_labels=True, node_color='cyan', edge_color='green', node_size=1000, font_size=15, font_weight='bold')
+        plt.title("Graph")
+
+        # Draw the BFS Tree
+        if bfs_tree:
+            # Create a graph from the BFS Tree
+            T = nx.DiGraph(bfs_tree)
+            pos_tree = nx.spring_layout(T)
+            plt.subplot(122)
+            nx.draw(T, pos_tree, with_labels=True, node_color='lightgreen', edge_color='blue', node_size=1000, font_size=15, font_weight='bold', arrows=True)
+            plt.title("BFS Tree")
+
+        plt.show()
+
+# Example usage
+if __name__ == "__main__":
+    g = Graph()
+
+    # Add vertices
+    for v in ['Location 1', 'Location 2',
+              'Location 3', 'location 4']:
+        g.add_vertex(v)
+
+    # Add edges
+    g.add_edge('Location 1', 'Location 3')
+    g.add_edge('Location 2', 'Location 4')
+    g.add_edge('Location 1', 'Location 2')
+    g.add_edge('Location 3', 'Location 4')
+
+    print("Graph:")
+    g.display()
+
+    # Perform BFS and get the Breadth-First Tree
+    start_vertex = 'Location 1'
+    bfs_tree = g.bfs_tree(start_vertex)
+
+    # Visualize the graph and the BFS tree
+    g.visualize(bfs_tree)
+
+
+
+
+
+"""Graphical User Interface for Python :"""
+
+
+import tkinter as tk
+from tkinter import messagebox
+import matplotlib.pyplot as plt
+import networkx as nx
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from collections import defaultdict, deque
+
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+        else:
+            messagebox.showerror("Error", "One or both vertices not found.")
+
+    def bfs_tree(self, start):
+        """Perform BFS and return the Breadth-First Tree as a dictionary."""
+        visited = set()
+        bfs_tree = defaultdict(list)
+        queue = deque([start])
+        visited.add(start)
+
+        while queue:
+            current = queue.popleft()
+            for neighbor in self.graph[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    bfs_tree[current].append(neighbor)
+                    queue.append(neighbor)
+        return bfs_tree
+
+    def visualize(self, bfs_tree=None):
+        """Visualize the graph and optionally the BFS tree."""
+        G = nx.Graph(self.graph)
+        pos = nx.spring_layout(G)
+
+        plt.figure(figsize=(12, 6))
+
+        # Draw the original graph
+        plt.subplot(121)
+        nx.draw(G, pos, with_labels=True, node_color='cyan', edge_color='green', node_size=1000, font_size=15, font_weight='bold')
+        plt.title("Graph")
+
+        # Draw the BFS Tree
+        if bfs_tree:
+            T = nx.DiGraph(bfs_tree)
+            pos_tree = nx.spring_layout(T)
+            plt.subplot(122)
+            nx.draw(T, pos_tree, with_labels=True, node_color='lightgreen', edge_color='blue', node_size=1000, font_size=15, font_weight='bold', arrows=True)
+            plt.title("BFS Tree")
+
+        plt.show()
+
+# Initialize graph object
+graph = Graph()
+
+# Tkinter GUI
+root = tk.Tk()
+root.title("BFS Tree Using Graph")
+root.geometry("900x700")
+root.configure(bg="turquoise")
+
+# Header Frame
+header_frame = tk.Frame(root, bg="turquoise")
+header_frame.pack(fill=tk.X, padx=10, pady=10)
+header_label = tk.Label(header_frame, text="BSF Graph Application", font=("Script MT Bold", 20), bg="turquoise")
+header_label.pack(pady=5)
+
+# Left Frame for Inputs and Buttons
+left_frame = tk.Frame(root, bg="turquoise")
+left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10)
+
+# Input for vertices
+vertex_label = tk.Label(left_frame, text="Vertex:", font=("Script MT Bold", 12), bg="turquoise")
+vertex_label.pack(pady=5)
+vertex_entry = tk.Entry(left_frame)
+vertex_entry.pack(pady=5)
+
+# Input for edges
+edge_label1 = tk.Label(left_frame, text="Edge (Vertex 1):", font=("Script MT Bold", 12), bg="turquoise")
+edge_label1.pack(pady=5)
+edge_entry1 = tk.Entry(left_frame)
+edge_entry1.pack(pady=5)
+
+edge_label2 = tk.Label(left_frame, text="Edge (Vertex 2):", font=("Script MT Bold", 12), bg="turquoise")
+edge_label2.pack(pady=5)
+edge_entry2 = tk.Entry(left_frame)
+edge_entry2.pack(pady=5)
+
+# Canvas Frame
+canvas_frame = tk.Frame(root, bg="turquoise")
+canvas_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+# Button Commands
+def add_vertex_command():
+    vertex = vertex_entry.get()
+    if vertex:
+        graph.add_vertex(vertex)
+        messagebox.showinfo("Info", f"Vertex {vertex} added.")
+        vertex_entry.delete(0, tk.END)
+
+def add_edge_command():
+    vertex1 = edge_entry1.get()
+    vertex2 = edge_entry2.get()
+    if vertex1 and vertex2:
+        graph.add_edge(vertex1, vertex2)
+        messagebox.showinfo("Info", f"Edge between {vertex1} and {vertex2} added.")
+        edge_entry1.delete(0, tk.END)
+        edge_entry2.delete(0, tk.END)
+
+def visualize_graph():
+    graph.visualize()
+
+def bfs_visualize_command():
+    start_vertex = vertex_entry.get()
+    if start_vertex:
+        bfs_tree = graph.bfs_tree(start_vertex)
+        graph.visualize(bfs_tree)
+
+# Buttons
+add_vertex_btn = tk.Button(left_frame, text="Add Vertex", command=add_vertex_command, font=("Script MT Bold", 12))
+add_vertex_btn.pack(pady=5)
+
+add_edge_btn = tk.Button(left_frame, text="Add Edge", command=add_edge_command, font=("Script MT Bold", 12))
+add_edge_btn.pack(pady=5)
+
+visualize_btn = tk.Button(left_frame, text="Visualize Graph", command=visualize_graph, font=("Script MT Bold", 12))
+visualize_btn.pack(pady=5)
+
+bfs_visualize_btn = tk.Button(left_frame, text="Visualize BFS", command=bfs_visualize_command, font=("Script MT Bold", 12))
+bfs_visualize_btn.pack(pady=5)
+
+quit_btn = tk.Button(left_frame, text="Quit", command=root.quit, font=("Script MT Bold", 12))
+quit_btn.pack(pady=5)
+
+root.mainloop()
+
+
+
+
+
+#Link for google colab : https://colab.research.google.com/drive/1dm0bkN-orN7rSKlHacyCMWW1FY7kXd0M?usp=sharing
