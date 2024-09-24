@@ -1,0 +1,261 @@
+#IMPLEMENTING QUEUE DATA STRUCTURE WITH INSERTION, DELETION, TRAVERSAL
+
+
+
+"""Basic reference code :"""
+
+class Queue:
+    def __init__(self):
+        self.queue = []
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def enqueue(self, item):
+        self.queue.append(item)
+        print(f"Enqueued: {item}")
+
+    def dequeue(self):
+        if self.is_empty():
+            print("Queue is empty. Cannot dequeue.")
+            return None
+        return self.queue.pop(0)
+
+    def traverse(self):
+        if self.is_empty():
+            print("Queue is empty.")
+        else:
+            print("Queue contains:", end=" ")
+            for item in self.queue:
+                print(item, end=" ")
+            print()
+
+# Example usage:
+if __name__ == "__main__":
+    q = Queue()
+
+    # Enqueue elements
+    q.enqueue(1)
+    q.enqueue(2)
+    q.enqueue(3)
+
+    # Traverse elements
+    q.traverse()
+
+    # Dequeue elements
+    print(f"Dequeued: {q.dequeue()}")
+    print(f"Dequeued: {q.dequeue()}")
+
+    # Traverse elements
+    q.traverse()
+
+    # Dequeue elements
+    print(f"Dequeued: {q.dequeue()}")
+
+    # Attempt to dequeue from an empty queue
+    print(f"Dequeued: {q.dequeue()}")
+
+
+
+
+
+"""Command Line Interface for Python :"""
+
+# Initialize an empty list to represent the queue
+queue = []
+
+# Function to check if the queue is empty
+def is_empty():
+    return len(queue) == 0
+
+# Function to add an element to the end of the queue
+def enqueue(element):
+    queue.append(element)
+
+# Function to remove and return the element from the front of the queue
+def dequeue():
+    if not is_empty():
+        return queue.pop(0)
+    else:
+        raise IndexError("dequeue from empty queue")
+
+# Function to display the elements of the queue
+def traverse():
+    if is_empty():
+        print("Queue is empty.")
+    else:
+        print("Queue elements:", ' -> '.join(queue))
+
+# Main function to perform queue operations
+def queue_operations():
+    while True:
+        # Display the menu for queue operations
+        print("\nQueue Operations: \n1. Enqueue \n2. Dequeue \n3. Traverse \n4. Exit")
+
+        # Get the user's choice
+        choice = input("Enter your choice (1-4): ")
+
+        if choice == '1':
+            # Enqueue operation
+            element = input("Enter element to enqueue: ")
+            enqueue(element)
+            print(f"{element} enqueued to queue.")
+
+        elif choice == '2':
+            # Dequeue operation
+            try:
+                element = dequeue()
+                print(f"{element} dequeued from queue.")
+            except IndexError as e:
+                print(e)
+
+        elif choice == '3':
+            # Traverse operation
+            traverse()
+        elif choice == '4':
+            # Exit the loop
+            print("Exiting...")
+            break
+
+        else:
+            # Handle invalid input
+            print("Invalid choice. Please enter a number between 1 and 4.")
+
+# Main function to run the program
+if __name__ == "__main__":
+    queue_operations()
+
+
+
+
+
+"""Graphical User Interface for Python:"""
+
+from tkinter import *
+from tkinter import messagebox
+
+# Initialize the queue as an empty list
+queue = []
+
+# Function to check if the queue is empty
+def is_empty():
+    return len(queue) == 0
+
+# Function to add an element to the end of the queue
+def enqueue(element):
+    queue.append(element)
+
+# Function to remove and return the element from the front of the queue
+def dequeue():
+    if not is_empty():
+        return queue.pop(0)
+    else:
+        raise IndexError("dequeue from empty queue")
+
+# Function to return the elements of the queue
+def traverse():
+    if is_empty():
+        return []
+    else:
+        return queue
+
+# Function to update the status label with a message
+def update_status(message):
+    status_label.config(text=message)
+
+# Function to draw the queue on the canvas
+def draw_queue():
+    canvas.delete("all")
+    if not is_empty():
+        x_start = 50
+        y_start = 50
+        box_width = 100
+        box_height = 30
+        padding = 10
+        for idx, element in enumerate(queue):
+            x = x_start + idx * (box_width + padding)
+            canvas.create_rectangle(x, y_start, x + box_width, y_start + box_height, fill="lightblue")
+            canvas.create_text(x + box_width / 2, y_start + box_height / 2, text=element, font=("Calibri", 12))
+        canvas.configure(scrollregion=canvas.bbox('all'))
+
+# Function to handle the enqueue operation
+def enqueue_element():
+    data = entry.get().strip()
+    if data:
+        enqueue(data)
+        entry.delete(0, END)
+        update_status(f"Enqueued: {data}")
+        draw_queue()
+    else:
+        messagebox.showwarning("Warning", "Element cannot be empty")
+
+# Function to handle the dequeue operation
+def dequeue_element():
+    try:
+        data = dequeue()
+        update_status(f"Dequeued: {data}")
+        draw_queue()
+    except IndexError:
+        messagebox.showwarning("Warning", "Queue is empty")
+
+# Function to handle the traverse operation
+def traverse_queue():
+    elements = traverse()
+    if elements:
+        update_status(f"Queue elements: {' -> '.join(elements)}")
+    else:
+        update_status("Queue is empty")
+    draw_queue()
+
+# Function to handle canvas configuration
+def on_canvas_configure(event):
+    canvas.configure(scrollregion=canvas.bbox('all'))
+
+# Create the main application window
+root = Tk()
+root.title("Prac 5")
+root.state("zoomed")
+root.configure(bg='light blue')
+
+# Create GUI elements with cyan background for labels
+label = Label(root, text="Queue Data Structure", font=("Script MT Bold", 20), bg="cyan")
+label.grid(row=0, column=0, columnspan=6, pady=10)
+
+entry_label = Label(root, text="Enter element:", font=("Calibri", 14), bg="cyan")
+entry_label.grid(row=1, column=0, padx=10, pady=10)
+
+entry = Entry(root, width=20, font=("Calibri", 14))
+entry.grid(row=1, column=1, padx=10, pady=10)
+
+enqueue_button = Button(root, text="Enqueue", font=("Calibri", 14), command=enqueue_element)
+enqueue_button.grid(row=1, column=2, padx=10, pady=10)
+
+dequeue_button = Button(root, text="Dequeue", font=("Calibri", 14), command=dequeue_element)
+dequeue_button.grid(row=1, column=3, padx=10, pady=10)
+
+traverse_button = Button(root, text="Traverse", font=("Calibri", 14), command=traverse_queue)
+traverse_button.grid(row=1, column=4, padx=10, pady=10)
+
+status_label = Label(root, text="", font=("Calibri", 14), bg="cyan")
+status_label.grid(row=2, column=0, columnspan=6, pady=10)
+
+# Add a frame to display the queue with a scrollbar
+queue_frame = Frame(root, bg="white")
+queue_frame.grid(row=3, column=0, columnspan=6, pady=10, sticky="nsew")
+
+canvas = Canvas(queue_frame, bg="white")
+canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+scrollbar = Scrollbar(queue_frame, orient=HORIZONTAL, command=canvas.xview)
+scrollbar.pack(side=BOTTOM, fill=X)
+
+canvas.configure(xscrollcommand=scrollbar.set)
+canvas.bind('<Configure>', on_canvas_configure)
+
+# Run the main application loop
+root.mainloop()
+
+
+
+
+#Link for google colab : https://colab.research.google.com/drive/1TCitaDB_U39RTLgadYsF6JBkV5lzgXXR?usp=sharing
