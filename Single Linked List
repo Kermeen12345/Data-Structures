@@ -1,0 +1,428 @@
+#IMPLEMENTING SINGLY LINKED LIST WITH INSERTION, DELETION, TRANSVERSAL
+
+"""Basic reference code :"""
+class Node:
+  """
+  A class to represent a node in a singly linked list
+  Attributes:
+      data: The data stored in the node
+      next: The reference to the next node in the list
+  """
+
+  def __init__(self, data):
+    """
+    Initializes a node with the given data
+    Args:
+        data: The data to be stored in the node
+    """
+    self.data = data
+    self.next = None
+
+
+class LinkedList:
+  """
+  A class to represent a singly linked list
+  Attributes:
+      head: The reference to the first node in the list
+  """
+
+  def __init__(self):
+    """
+    Initializes the linked list with an empty head
+    """
+    self.head = None
+
+  def is_empty(self):
+    """
+    Checks if the linked list is empty
+    Returns:
+        bool: True if the list is empty, False otherwise
+    """
+    return self.head is None
+
+  def insert_at_beginning(self, data):
+    """
+    Inserts a new node at the beginning of the linked list
+    Args:
+        data: The data to be inserted
+    """
+    new_node = Node(data)
+    new_node.next = self.head
+    self.head = new_node
+
+  def insert_at_end(self, data):
+    """
+    Inserts a new node at the end of the linked list
+
+    Args:
+        data: The data to be inserted
+    """
+    new_node = Node(data)
+    if self.is_empty():
+      self.head = new_node
+      return
+    current = self.head
+    while current.next:
+      current = current.next
+    current.next = new_node
+
+  def delete_at_beginning(self):
+    """
+    Deletes the first node from the linked list
+
+    Returns:
+        The data of the deleted node, or None if the list is empty
+    """
+    if self.is_empty():
+      return None
+    deleted_node = self.head
+    self.head = self.head.next
+    return deleted_node.data
+
+  def delete_at_end(self):
+    """
+    Deletes the last node from the linked list
+
+    Returns:
+        The data of the deleted node, or None if the list is empty
+    """
+    if self.is_empty():
+      return None
+    if self.head.next is None:
+      deleted_node = self.head
+      self.head = None
+      return deleted_node.data
+    current = self.head
+    while current.next.next:
+      current = current.next
+    deleted_node = current.next
+    current.next = None
+    return deleted_node.data
+
+  def traverse(self):
+    """
+    Prints the elements of the linked list
+    """
+    current = self.head
+    while current:
+      print(current.data, end=" -> ")
+      current = current.next
+    print("None")
+
+
+# Create a linked list
+linked_list = LinkedList()
+
+# Insert elements
+linked_list.insert_at_beginning(50)
+linked_list.insert_at_end(30)
+linked_list.insert_at_beginning(20)
+linked_list.insert_at_end(10)
+
+# Print the linked list
+print("Linked list:")
+linked_list.traverse()
+
+# Delete elements from beginning and end
+deleted_data = linked_list.delete_at_beginning()
+if deleted_data:
+  print("Deleted from beginning:", deleted_data)
+deleted_data = linked_list.delete_at_end()
+if deleted_data:
+  print("Deleted from end:", deleted_data)
+
+# Print the linked list after deletions
+print("Linked list after deletions:")
+linked_list.traverse()
+
+
+
+"""Command Line Interface for Python :"""
+# Function to check if the linked list is empty
+def is_empty(head):
+    return head is None
+
+# Function to insert a node at the beginning of the linked list
+def insert_at_beginning(head, data):
+    # Create a new node and point it to the current head
+    new_node = {'data': data, 'next': head}
+    # Return the new node as the new head of the list
+    return new_node
+
+# Function to insert a node at the end of the linked list
+def insert_at_end(head, data):
+    # Create a new node with the given data and no next node
+    new_node = {'data': data, 'next': None}
+    # If the list is empty, return the new node as the head
+    if is_empty(head):
+        return new_node
+    # Traverse the list to find the last node
+    current = head
+    while current['next']:
+        current = current['next']
+    # Point the last node to the new node
+    current['next'] = new_node
+    return head
+
+# Function to delete a node from the beginning of the linked list
+def delete_at_beginning(head):
+    # If the list is empty, return None and the current head
+    if is_empty(head):
+        return None, head
+    # Save the current head to be deleted
+    deleted_node = head
+    # Move the head to the next node
+    head = head['next']
+    # Print the data of the deleted node
+    print(f"{deleted_node['data']} is deleted from the beginning")
+    # Return the data of the deleted node and the new head
+    return deleted_node['data'], head
+
+# Function to delete a node from the end of the linked list
+def delete_at_end(head):
+    # If the list is empty, return None and the current head
+    if is_empty(head):
+        return None, head
+    # If there is only one node, delete it and set head to None
+    if head['next'] is None:
+        deleted_node = head
+        head = None
+        print(f"{deleted_node['data']} is deleted from the end")
+        return deleted_node['data'], head
+    # Traverse the list to find the second-to-last node
+    current = head
+    while current['next']['next']:
+        current = current['next']
+    # Save the last node to be deleted
+    deleted_node = current['next']
+    # Remove the last node by setting the next of the second-to-last node to None
+    current['next'] = None
+    print(f"{deleted_node['data']} is deleted from the end")
+    # Return the data of the deleted node and the head
+    return deleted_node['data'], head
+
+# Function to traverse and print the linked list
+def traverse(head):
+    current = head
+    while current:
+        # Print the data of the current node
+        print(current['data'], end=" -> ")
+        # Move to the next node
+        current = current['next']
+    print("None")
+
+# Function to perform linked list operations based on user input
+def linked_list_operation():
+    head = None
+
+    while True:
+        # Display the menu for linked list operations
+        print("\nSingly Linked List\n1. Is empty\n2. Insert at beginning\n3. Insert at end\n4. Delete at beginning\n5. Delete at end\n6. Traverse\n7. Exit")
+
+        # Take user input for the choice of operation
+        choice = int(input("Enter your choice (1-7): "))
+
+        # Check if the linked list is empty
+        if choice == 1:
+            if is_empty(head):
+                print("Linked List is empty")
+            else:
+                print("Linked List is not empty")
+
+        # Insert a node at the beginning
+        elif choice == 2:
+            data = input("Enter the data: ")
+            head = insert_at_beginning(head, data)
+
+        # Insert a node at the end
+        elif choice == 3:
+            data = input("Enter the data: ")
+            head = insert_at_end(head, data)
+
+        # Delete a node from the beginning
+        elif choice == 4:
+            _, head = delete_at_beginning(head)
+
+        # Delete a node from the end
+        elif choice == 5:
+            _, head = delete_at_end(head)
+
+        # Traverse and print the linked list
+        elif choice == 6:
+            traverse(head)
+
+        # Exit the program
+        elif choice == 7:
+            print("Exiting")
+            break
+
+        # Handle invalid choices
+        else:
+            print("Invalid choice. Please enter a number between 1 and 7.")
+
+# Call the function to start linked list operations
+linked_list_operation()
+
+
+
+
+"""Graphical User Interface for Python :"""
+from tkinter import *
+from tkinter import messagebox
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+def is_empty(head):
+    return head is None
+
+def insert_at_beginning(head, data, size, max_size):
+    if max_size is not None and size[0] >= max_size:
+        messagebox.showerror("Error", "Linked list has reached its maximum size")
+        return head
+    new_node = Node(data)
+    new_node.next = head
+    size[0] += 1
+    return new_node
+
+def insert_at_end(head, data, size, max_size):
+    if max_size is not None and size[0] >= max_size:
+        messagebox.showerror("Error", "Linked list has reached its maximum size")
+        return head
+    new_node = Node(data)
+    if is_empty(head):
+        size[0] += 1
+        return new_node
+    current = head
+    while current.next:
+        current = current.next
+    current.next = new_node
+    size[0] += 1
+    return head
+
+def delete_at_beginning(head, size):
+    if is_empty(head):
+        return None, head
+    deleted_node = head
+    head = head.next
+    size[0] -= 1
+    messagebox.showinfo("Delete", f"{deleted_node.data} is deleted from the beginning")
+    return deleted_node.data, head
+
+def delete_at_end(head, size):
+    if is_empty(head):
+        return None, head
+    if head.next is None:
+        deleted_node = head
+        head = None
+        size[0] -= 1
+        messagebox.showinfo("Delete", f"{deleted_node.data} is deleted from the end")
+        return deleted_node.data, head
+    current = head
+    while current.next.next:
+        current = current.next
+    deleted_node = current.next
+    current.next = None
+    size[0] -= 1
+    messagebox.showinfo("Delete", f"{deleted_node.data} is deleted from the end")
+    return deleted_node.data, head
+
+def traverse(head):
+    current = head
+    nodes = []
+    while current:
+        nodes.append(str(current.data))
+        current = current.next
+    messagebox.showinfo("Traverse", " -> ".join(nodes) + " -> None")
+
+def set_linked_list_size(size_entry, max_size):
+    try:
+        size = int(size_entry.get())
+        if size <= 0:
+            raise ValueError
+        max_size[0] = size
+        messagebox.showinfo("Success", f"Linked list size set to {size}")
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid positive integer for linked list size")
+
+def insert_at_beginning_handler(input_entry, head, size, max_size, canvas):
+    data = input_entry.get()
+    if data:
+        head[0] = insert_at_beginning(head[0], data, size, max_size[0])
+        update_visualization(head[0], canvas)
+
+def insert_at_end_handler(input_entry, head, size, max_size, canvas):
+    data = input_entry.get()
+    if data:
+        head[0] = insert_at_end(head[0], data, size, max_size[0])
+        update_visualization(head[0], canvas)
+
+def delete_at_beginning_handler(head, size, canvas):
+    _, head[0] = delete_at_beginning(head[0], size)
+    update_visualization(head[0], canvas)
+
+def delete_at_end_handler(head, size, canvas):
+    _, head[0] = delete_at_end(head[0], size)
+    update_visualization(head[0], canvas)
+
+def is_empty_handler(head):
+    if is_empty(head[0]):
+        messagebox.showinfo("Empty", "Linked list is empty")
+    else:
+        messagebox.showinfo("Not Empty", "Linked list is not empty")
+
+def update_visualization(head, canvas):
+    canvas.delete("all")
+    node = head
+    y = 50
+    while node:
+        canvas.create_rectangle(100, y, 300, y + 30, fill="lightblue")
+        canvas.create_text(200, y + 15, text=str(node.data), font=("Script MT Bold", 12))
+        y += 40
+        node = node.next
+
+def run_linked_list_app():
+    head = [None]
+    size = [0]
+    max_size = [None]
+
+    root = Tk()
+    root.title("Practical 2")
+    root.state("zoomed")
+    root['bg'] = 'skyblue'
+
+    root.columnconfigure((0, 1, 2, 3, 4, 5), weight=1)
+    root.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+
+    title_label = Label(root, text="Linked List Data Structure", bg='cyan', font=("Script MT Bold", 16))
+    title_label.grid(row=0, column=0, columnspan=6, pady=10)
+
+    Label(root, text="Enter the number:", bg='skyblue', font=("Script MT Bold", 12)).grid(row=1, column=0, padx=10, pady=10, sticky=E)
+    input_entry = Entry(root, font=("Script MT Bold", 12))
+    input_entry.grid(row=1, column=1, padx=10, pady=10, sticky=W)
+
+    Label(root, text="Set Linked List size:", bg='skyblue', font=("Script MT Bold", 12)).grid(row=1, column=2, padx=10, pady=10, sticky=E)
+    size_entry = Entry(root, font=("Script MT Bold", 12))
+    size_entry.grid(row=1, column=3, padx=10, pady=10, sticky=W)
+    Button(root, text="Set Size", command=lambda: set_linked_list_size(size_entry, max_size), font=("Script MT Bold", 12)).grid(row=1, column=4, padx=10, pady=10, sticky=W)
+
+    Button(root, text="Insert at Beginning", command=lambda: insert_at_beginning_handler(input_entry, head, size, max_size, canvas), font=("Script MT Bold", 12)).grid(row=2, 
+                                                                                                column=0, padx=10, pady=10)
+    Button(root, text="Insert at End", command=lambda: insert_at_end_handler(input_entry, head, size, max_size, canvas), font=("Script MT Bold", 12)).grid(row=2, column=1,
+                                                                                                padx=10, pady=10)
+    Button(root, text="Delete at Beginning", command=lambda: delete_at_beginning_handler(head, size, canvas), font=("Script MT Bold", 12)).grid(row=2, column=2, padx=10, pady=10)
+    Button(root, text="Delete at End", command=lambda: delete_at_end_handler(head, size, canvas), font=("Script MT Bold", 12)).grid(row=2, column=3, padx=10, pady=10)
+    Button(root, text="Is Empty", command=lambda: is_empty_handler(head), font=("Script MT Bold", 12)).grid(row=2, column=4, padx=10, pady=10)
+
+    canvas = Canvas(root, width=800, height=500, bg='white')
+    canvas.grid(row=3, column=0, columnspan=5, padx=10, pady=10)
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    run_linked_list_app()
+
+
+#Link for google colab : https://colab.research.google.com/drive/1gMJi8BqDMvkLqHl94dACkjq7yE_Xzfbo?usp=sharing
